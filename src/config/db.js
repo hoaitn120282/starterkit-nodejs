@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const debug = require('debug')('node-server:db');
 const config = require('./index');
-const Op = { Sequelize.Op };
+const Op = Sequelize.Op;
 
 const operators = {
   $eq: Op.eq,

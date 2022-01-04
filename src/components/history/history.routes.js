@@ -29,9 +29,80 @@ const paramValidation = {
   },
 };
 
+/**
+ * @api {get} /play-history/:walletID Histories Listing
+ * @apiVersion 1.0.0
+ * @apiName Get the list of histories via wallet ID
+ * @apiGroup Play History
+ *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ *
+ * @apiSuccess {Object} Model[{}] List items of the History.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "rewardNumber": 190,
+ *       "expNumber": 3,
+ *       "rewardType": "TOC",
+ *       "activityName": "Training",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ * @apiError HistoryNotFound Data is not exist.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "Data is not exist"
+ *     }
+ */
 router.route('/')
-  .get(modelCtrl.list)
-
+  .get(modelCtrl.list);
+/**
+ * @api {post} /play-history History Creation
+ * @apiVersion 1.0.0
+ * @apiName Create history item with wallet ID
+ * @apiGroup Play History
+ *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} rewardNumber Mandatory Reward number in play session.
+ * @apiParam {Integer} expNumber Mandatory Experience number in play session.
+ * @apiParam {String} rewardType Mandatory The of token reward won in game.
+ * @apiParam {activityName} Mandatory Activity name of play session.
+ *
+ * @apiSuccess {Object} Model[{}] Item of the claim created.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "rewardNumber": 190,
+ *       "expNumber": 3,
+ *       "rewardType": "TOC",
+ *       "activityName": "Training",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router.route('/')
   .post(validate(paramValidation.createModel), modelCtrl.create);
 
 router.route('/:id')

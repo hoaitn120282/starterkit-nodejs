@@ -57,6 +57,7 @@ function update(req, res, next) {
   reward.rewardAmount = req.body.rewardAmount;
   reward.rewardWithdrawn = req.body.rewardWithdrawn;
   reward.rewardAvailable = req.body.rewardAvailable;
+  reward.totalExp = req.body.totalExp;
   reward.rewardType = req.body.rewardType;
 
   return reward.save()

@@ -30,10 +30,81 @@ const paramValidation = {
 };
 
 router.route('/')
-  .get(modelCtrl.list)
+  .get(modelCtrl.list);
 
+/**
+ * @api {post} /claims Claims Creation
+ * @apiVersion 1.0.0
+ * @apiName Create claim item with wallet ID
+ * @apiGroup Claim
+ *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} claimRewardAmount Mandatory The amount in claim request.
+ * @apiParam {String} claimRewardType Mandatory The type of token in request.
+ * @apiParam {String} [transactionID] The type of token in request.
+ * @apiParam {String} claimStatus Status of request, It should be "Pending".
+ *
+ * @apiSuccess {Object} Model[{}] Item of the claim created.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *       {
+ *        "id": "1",
+ *        "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *        "claimRewardAmount": 15,
+ *        "transactionID": null,
+ *        "claimRewardType": "TOC",
+ *        "claimStatus": "Confirmed",
+ *        "createdAt": "2022-01-04T19:21:21.264Z",
+ *        "updatedAt": "2022-01-04T19:23:08.326Z"
+ *       },
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router.route('/')
   .post(validate(paramValidation.createModel), modelCtrl.create);
-
+/**
+ * @api {get} /claims/:walletID Claims List
+ * @apiVersion 1.0.0
+ * @apiName Get the list of claims via wallet ID
+ * @apiGroup Claim
+ *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ *
+ * @apiSuccess {Object} Model[{}] List items of the Claims.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *       {
+ *        "id": "1",
+ *        "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *        "claimRewardAmount": 15,
+ *        "transactionID": "D9B7323243958",
+ *        "claimRewardType": "TOC",
+ *        "claimStatus": "Confirmed",
+ *        "createdAt": "2022-01-04T19:21:21.264Z",
+ *        "updatedAt": "2022-01-04T19:23:08.326Z"
+ *       },
+ *     ]
+ *
+ * @apiError ClaimNotFound Data is not exist.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "Data is not exist"
+ *     }
+ */
 router.route('/:walletID')
   .get(modelCtrl.get)
 

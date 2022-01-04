@@ -13,11 +13,11 @@ const config = require('./config');
 const APIError = require('./helpers/APIError');
 const corsOptions = require('./config/cors.json');
 
-corsOptions.options = (req, res, next){
-  if (req.method === 'OPTIONS') {
+corsOptions.options = function(req, res, next){
+  if(req.method === 'OPTIONS'){
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.status(200).end();
-  } else {
+  }else{
     next();
   }
 };
@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 // error handler, send stacktrace only during development
 app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
   res.status(err.status).json({ // eslint-disable-line implicit-arrow-linebreak
-    message: err.isPublic ? err.message : httpStatus[ err.status ],
+    message: err.isPublic ? err.message : httpStatus[err.status],
     stack: config.env === 'development' ? err.stack : {},
   }));
 

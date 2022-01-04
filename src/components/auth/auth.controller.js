@@ -108,8 +108,6 @@ function login(req, res, next) {
 	);
 }
 
-
-
 /**
  * Register a new user
  * @property {string} req.body.lastName - The lastName of user.

@@ -2,7 +2,11 @@ const express = require('express');
 const expressJwt = require('express-jwt');
 const config = require('../config');
 const userRoutes = require('./user/user.routes');
+const rewardRoutes = require('./reward/reward.routes');
 const authRoutes = require('./auth/auth.routes');
+const historyRoutes = require('./history/history.routes');
+const claimRoutes = require('./claim/claim.routes');
+const turnsRoutes = require('./turn/turn.routes');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -13,6 +17,7 @@ router.get('/health-check', (req, res) => res.send('OK'));
 router.use('/auth', authRoutes);
 
 // Validating all the APIs with jwt token.
+
 router.use(expressJwt({
   secret: config.jwtSecret,
   algorithms: ['HS256'],
@@ -35,7 +40,11 @@ router.use((req, res, next) => {
   next();
 });
 
-// mount user routes at /users
+// mount all routes at /routeName
 router.use('/users', userRoutes);
+router.use('/rewards', rewardRoutes);
+router.use('/play-history', historyRoutes);
+router.use('/claims', claimRoutes);
+router.use('/turns', turnsRoutes);
 
 module.exports = router;

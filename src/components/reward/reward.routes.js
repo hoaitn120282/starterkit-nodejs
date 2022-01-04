@@ -12,6 +12,7 @@ const paramValidation = {
       rewardAmount: Joi.number(),
       rewardWithdrawn: Joi.number(),
       rewardAvailable: Joi.number(),
+      totalExp: Joi.number(),
       rewardType: Joi.string(),
     }),
     params: Joi.object({
@@ -24,6 +25,7 @@ const paramValidation = {
       rewardAmount: Joi.number(),
       rewardWithdrawn: Joi.number(),
       rewardAvailable: Joi.number(),
+      totalExp: Joi.number(),
       rewardType: Joi.string(),
     }),
   },

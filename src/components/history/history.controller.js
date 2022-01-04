@@ -49,7 +49,7 @@ function create(req, res, next) {
         },
       }).then((reward) => {
         if (!isEmpty(reward)) {
-          const { rewardModel } = reward[0];
+          const rewardModel = reward[0];
           rewardModel.rewardAvailable = rewardModel.rewardAvailable + savedmodel.rewardNumber;
           rewardModel.rewardAmount = rewardModel.rewardAvailable + rewardModel.rewardWithdrawn;
           rewardModel.totalExp = rewardModel.totalExp + savedmodel.expNumber;

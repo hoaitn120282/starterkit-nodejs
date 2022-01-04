@@ -1,0 +1,7 @@
+{
+    "name": "Snake City",
+    "version": "1.0.0",
+    "description": "APIs document definition",
+    "title": "Snake City",
+    "url": "http://game.snakecity.io:8000/api"
+}
