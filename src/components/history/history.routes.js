@@ -108,8 +108,6 @@ router.route('/')
 router.route('/:id')
   .get(modelCtrl.get)
 
-  .put(validate(paramValidation.updateModel), modelCtrl.update)
-
   .delete(modelCtrl.destroy);
 
 router.param('id', modelCtrl.load);

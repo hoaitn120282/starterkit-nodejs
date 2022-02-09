@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.createTable('rewards', {
+  up: (queryInterface, Sequelize) => queryInterface.createTable('deposits', {
     id: {
       type: Sequelize.BIGINT,
       allowNull: false,
@@ -7,14 +7,21 @@ module.exports = {
       autoIncrement: true,
     },
     walletID: {
-      type: Sequelize.STRING,
       allowNull: false,
+      type: Sequelize.STRING,
     },
-    rewardAmount: {
+    tokenBalance: {
+      allowNull: false,
       type: Sequelize.FLOAT,
     },
-    rewardType: {
+    tokenType: {
+      allowNull: false,
       type: Sequelize.STRING,
+    },
+    status: {
+      allowNull: false,
+      type: Sequelize.STRING,
+      defaultValue: 'Fail',
     },
     createdAt: {
       allowNull: false,
@@ -25,5 +32,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: (queryInterface) => queryInterface.dropTable('rewards'),
+  down: (queryInterface) => queryInterface.dropTable('deposits'),
 };

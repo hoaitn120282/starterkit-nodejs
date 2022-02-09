@@ -17,12 +17,20 @@ const UserSchema = {
   },
   nonce: {
     allowNull: false,
-    type: Sequelize.INTEGER
+    type: Sequelize.INTEGER,
   },
   publicAddress: {
     allowNull: false,
     type: Sequelize.STRING,
     unique: true,
+  },
+  walletID: {
+    allowNull: false,
+    type: Sequelize.STRING,
+  },
+  token: {
+    allowNull: true,
+    type: Sequelize.STRING,
   },
   createdAt: {
     allowNull: false,

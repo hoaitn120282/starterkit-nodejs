@@ -1,6 +1,6 @@
 const { isEmpty } = require('lodash');
 const History = require('./hisroty.model');
-const Reward = require('../reward/reward.model');
+const Models = require('../models');
 
 /**
  * Load History and append to req.
@@ -24,15 +24,6 @@ function get(req, res) {
 }
 
 /**
- * Get History profile of logged in model
- * @returns {Promise<History>}
- */
-function getProfile(req, res, next) {
-  return History.get(res.locals.session.id)
-    .then((model) => res.json(model.safeModel()))
-    .catch((e) => next(e));
-}
-/**
  * Create History
  * @param {*} req
  * @param {*} res
@@ -40,55 +31,22 @@ function getProfile(req, res, next) {
  */
 function create(req, res, next) {
   const model = new History(req.body);
+
   return model.save()
     .then((savedmodel) => {
-      Reward.findAll({
-        where: {
-          walletID: savedmodel.walletID,
-          rewardType: savedmodel.rewardType,
-        },
-      }).then((reward) => {
-        if (!isEmpty(reward)) {
-          const rewardModel = reward[0];
-          rewardModel.rewardAvailable = rewardModel.rewardAvailable + savedmodel.rewardNumber;
-          rewardModel.rewardAmount = rewardModel.rewardAvailable + rewardModel.rewardWithdrawn;
-          rewardModel.totalExp = rewardModel.totalExp + savedmodel.expNumber;
-          rewardModel.save();
+      Models.Player.findOne({
+        where: { walletID: savedmodel.walletID },
+      }).then((player) => {
+        if (!isEmpty(player)) {
+          const playerObj = player;
+          playerObj.totalExp += savedmodel.expNumber;
+          playerObj.save();
         } else {
-          const rewardModel = new Reward();
-          rewardModel.walletID = savedmodel.walletID;
-          rewardModel.rewardAmount = savedmodel.rewardNumber;
-          rewardModel.rewardAvailable = savedmodel.rewardNumber;
-          rewardModel.rewardWithdrawn = 0;
-          rewardModel.totalExp = savedmodel.expNumber;
-          rewardModel.rewardType = savedmodel.rewardType;
-          rewardModel.save();
+          res.json({ message: 'Player does not exsit!' });
         }
       });
       res.json(savedmodel.safeModel());
     })
-    .catch((e) => next(e));
-}
-
-/**
- * Update existing History
- * @property {string} req.body.walletID .
- * @property {float} req.body.rewardNumber .
- * @property {float} req.body.expNumber .
- * @property {string} req.body.rewardType .
- * @property {string} req.body.activityName .
- * @returns {History}
- */
-function update(req, res, next) {
-  const { model } = req;
-  model.walletID = req.body.walletID;
-  model.rewardNumber = req.body.rewardNumber;
-  model.expNumber = req.body.expNumber;
-  model.rewardType = req.body.rewardType;
-  model.activityName = req.body.activityName;
-
-  return model.save()
-    .then((savedModel) => res.json(savedModel.safeModel()))
     .catch((e) => next(e));
 }
 
@@ -119,8 +77,6 @@ function destroy(req, res, next) {
 module.exports = {
   load,
   get,
-  getProfile,
-  update,
   list,
   destroy,
   create,

@@ -5,9 +5,9 @@ const db = require('../../config/db');
 const APIError = require('../../helpers/APIError');
 
 /**
- * Reward Schema
+ * Deposit Schema
  */
-const RewardSchema = {
+const DepositSchema = {
   id: {
     type: Sequelize.BIGINT,
     allowNull: false,
@@ -15,16 +15,21 @@ const RewardSchema = {
     autoIncrement: true,
   },
   walletID: {
-    type: Sequelize.STRING,
     allowNull: false,
-
+    type: Sequelize.STRING,
   },
-  rewardAmount: {
+  tokenBalance: {
+    allowNull: false,
     type: Sequelize.FLOAT,
   },
-  rewardType: {
-    type: Sequelize.STRING,
+  tokenType: {
     allowNull: false,
+    type: Sequelize.STRING,
+  },
+  status: {
+    allowNull: false,
+    type: Sequelize.STRING,
+    defaultValue: 'Fail',
   },
   createdAt: {
     allowNull: false,
@@ -36,7 +41,7 @@ const RewardSchema = {
   },
 };
 
-const Rewards = db.sequelize.define('reward', RewardSchema);
+const Deposit = db.sequelize.define('deposits', DepositSchema);
 
 /**
  * Statics
@@ -45,13 +50,13 @@ const Rewards = db.sequelize.define('reward', RewardSchema);
 /**
  * Get Reward
  * @param {number} id - The id of Reward.
- * @returns {Promise<Reward, APIError>}
+ * @returns {Promise<Claim, APIError>}
  */
-Rewards.get = function get(id) {
+Deposit.get = function get(id) {
   return this.findByPk(id)
-    .then((reward) => {
-      if (reward) {
-        return reward;
+    .then((deposit) => {
+      if (deposit) {
+        return deposit;
       }
       const err = new APIError('No such Record exists!', httpStatus.NOT_FOUND, true);
       return Promise.reject(err);
@@ -59,12 +64,12 @@ Rewards.get = function get(id) {
 };
 
 /**
- * List Rewards in order of 'id'.
- * @param {number} skip - Number of Rewards to be skipped.
- * @param {number} limit - Limit number of Rewards to be returned.
+ * List Deposit in order of 'id'.
+ * @param {number} skip - Number of Deposit to be skipped.
+ * @param {number} limit - Limit number of Deposit to be returned.
  * @returns {Promise<Reward[]>}
  */
-Rewards.list = function list({ skip = 0, limit = 50 } = {}) {
+Deposit.list = function list({ skip = 0, limit = 50 } = {}) {
   return this.findAll({
     limit,
     offset: skip,
@@ -72,23 +77,26 @@ Rewards.list = function list({ skip = 0, limit = 50 } = {}) {
   });
 };
 
-Rewards.getBywalletID = function getBywalletID(wallet) {
+Deposit.getBywalletID = function getBywalletID(wallet, { skip = 0, limit = 50 } = {}) {
   return this.findAll({
     where: {
       walletID: wallet,
     },
+    limit,
+    offset: skip,
+    order: [['createdAt', 'DESC']],
   });
 };
 
 /**
- * Generates same model of Rewards details.
- * @returns {object} - Public information of Rewards.
+ * Generates same model of Deposit details.
+ * @returns {object} - Public information of Deposit.
  */
-Rewards.prototype.safeModel = function safeModel() {
+Deposit.prototype.safeModel = function safeModel() {
   return _.omit(this.toJSON(), ['password']);
 };
 
 /**
- * @typedef Reward
+ * @typedef Deposits
  */
-module.exports = Rewards;
+module.exports = Deposit;
