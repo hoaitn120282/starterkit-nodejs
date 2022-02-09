@@ -13,9 +13,6 @@ module.exports = {
     claimRewardAmount: {
       type: Sequelize.FLOAT,
     },
-    transactionID: {
-      type: Sequelize.STRING,
-    },
     claimRewardType: {
       type: Sequelize.STRING,
     },

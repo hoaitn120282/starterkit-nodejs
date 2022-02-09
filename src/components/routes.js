@@ -7,6 +7,9 @@ const authRoutes = require('./auth/auth.routes');
 const historyRoutes = require('./history/history.routes');
 const claimRoutes = require('./claim/claim.routes');
 const turnsRoutes = require('./turn/turn.routes');
+const playerRoutes = require('./player/player.routes');
+const withdrawRoutes = require('./withdraw/withdraw.routes');
+const depositRoutes = require('./deposit/deposit.routes');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -34,6 +37,7 @@ router.use(expressJwt({
 }));
 
 // If jwt is valid, storing user data in local session.
+
 router.use((req, res, next) => {
   const authorization = req.header('authorization');
   res.locals.session = JSON.parse(Buffer.from((authorization.split(' ')[1]).split('.')[1], 'base64').toString()); // eslint-disable-line no-param-reassign
@@ -46,5 +50,8 @@ router.use('/rewards', rewardRoutes);
 router.use('/play-history', historyRoutes);
 router.use('/claims', claimRoutes);
 router.use('/turns', turnsRoutes);
+router.use('/players', playerRoutes);
+router.use('/withdraw', withdrawRoutes);
+router.use('/deposit', depositRoutes);
 
 module.exports = router;

@@ -1,13 +1,13 @@
 const { isEmpty } = require('lodash');
-const Claim = require('./claim.model');
+const Deposit = require('./deposit.model');
 const Reward = require('../reward/reward.model');
 const config = require('../../config');
 /**
- * Load Claim and append to req.
+ * Load Deposit and append to req.
  */
 function load(req, res, next, walletID) {
   const { limit = 50, skip = 0 } = req.query;
-  return Claim.getBywalletID(walletID, { limit, skip })
+  return Deposit.getBywalletID(walletID, { limit, skip })
     .then((model) => {
       req.model = model;
       return res.json(req.model);
@@ -15,8 +15,8 @@ function load(req, res, next, walletID) {
     .catch((e) => next(e));
 }
 
-function findClaim(req, res, next, id) {
-  return Claim.get(id)
+function findDeposit(req, res, next, id) {
+  return Deposit.get(id)
     .then((model) => {
       req.model = model;
       return next();
@@ -25,46 +25,49 @@ function findClaim(req, res, next, id) {
 }
 
 /**
- * Get Claim
- * @returns {Claim}
+ * Get Deposit
+ * @returns {Deposit}
  */
 function get(req, res) {
   return res.json(req.model.safeModel());
 }
 
 /**
- * Create claim
+ * Create Deposit
  * @param {*} req
  * @param {*} res
  * @param {*} next
  */
 function create(req, res, next) {
-  const model = new Claim(req.body);
+  const model = new Deposit(req.body);
   return model.save()
     .then((savedmodel) => {
       Reward.findOne({
         where: {
           walletID: savedmodel.walletID,
-          rewardType: savedmodel.claimRewardType,
+          rewardType: savedmodel.tokenType,
         },
       })
         .then((reward) => {
-          const balance = (model.claimRewardAmount - ((config.withdrawFee/100)*model.claimRewardAmount));
           if (!isEmpty(reward)) {
             const rewardModel = reward;
-            rewardModel.rewardAmount += balance;
-            rewardModel.claimStatus = 'Success';
+            rewardModel.rewardAmount += savedmodel.tokenBalance;
+            rewardModel.rewardType = savedmodel.tokenType;
             rewardModel.save();
+            model.status = 'Success';
+            model.save();
+            res.json(savedmodel.safeModel());
           } else {
             const rewardModel = new Reward();
-            rewardModel.walletID = model.walletID;
-            rewardModel.rewardAmount = balance;
-            rewardModel.rewardType = model.claimRewardType;
-            rewardModel.claimStatus = 'Success';
+            rewardModel.rewardAmount = savedmodel.tokenBalance;
+            rewardModel.rewardType = savedmodel.tokenType;
+            rewardModel.walletID = savedmodel.walletID;
             rewardModel.save();
+            model.status = 'Success';
+            model.save();
+            res.json(savedmodel.safeModel());
           }
         });
-      res.json(savedmodel.safeModel());
     })
     .catch((e) => next(e));
 }
@@ -73,18 +76,18 @@ function create(req, res, next) {
  * Get Model list.
  * @property {number} req.query.skip
  * @property {number} req.query.limit
- * @returns {Promise<Claim[]>}
+ * @returns {Promise<Deposit[]>}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  return Claim.list({ limit, skip })
-    .then((claims) => res.json(claims))
+  return Deposit.list({ limit, skip })
+    .then((Deposits) => res.json(Deposits))
     .catch((e) => next(e));
 }
 
 /**
- * Delete Claim.
- * @returns {Claim}
+ * Delete Deposit.
+ * @returns {Deposit}
  */
 function destroy(req, res, next) {
   const { model } = req;
@@ -99,5 +102,5 @@ module.exports = {
   list,
   destroy,
   create,
-  findClaim,
+  findDeposit,
 };

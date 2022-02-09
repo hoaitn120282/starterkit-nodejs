@@ -41,8 +41,7 @@ router.route('/')
  * @apiParam {String} walletID Mandatory unique Param.
  * @apiParam {Integer} claimRewardAmount Mandatory The amount in claim request.
  * @apiParam {String} claimRewardType Mandatory The type of token in request.
- * @apiParam {String} [transactionID] The type of token in request.
- * @apiParam {String} claimStatus Status of request, It should be "Pending".
+ * @apiParam {String} claimStatus Status of request, It should be "Confirmed".
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *
@@ -53,7 +52,6 @@ router.route('/')
  *        "id": "1",
  *        "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
  *        "claimRewardAmount": 15,
- *        "transactionID": null,
  *        "claimRewardType": "TOC",
  *        "claimStatus": "Confirmed",
  *        "createdAt": "2022-01-04T19:21:21.264Z",
@@ -109,9 +107,6 @@ router.route('/:walletID')
   .get(modelCtrl.get)
 
   .delete(modelCtrl.destroy);
-
-router.route('/:id')
-  .put(validate(paramValidation.updateModel), modelCtrl.update);
 
 router.param('id', modelCtrl.findClaim);
 router.param('walletID', modelCtrl.load);

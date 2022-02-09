@@ -11,10 +11,18 @@ module.exports = {
       type: Sequelize.INTEGER,
     },
     publicAddress: {
-      allowNull: true,
+      allowNull: false,
       type: Sequelize.STRING,
       unique: true,
       validate: { isLowercase: true },
+    },
+    walletID: {
+      allowNull: false,
+      type: Sequelize.STRING,
+    },
+    token: {
+      allowNull: true,
+      type: Sequelize.STRING,
     },
     createdAt: {
       allowNull: false,

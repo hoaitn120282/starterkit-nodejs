@@ -43,6 +43,8 @@ const config = {
   jwtExpiresIn: envVars.JWT_EXPIRES_IN,
   secret: envVars.API_SECRET,
   algorithms: envVars.API_ALGORITHMS,
+  claimFee: envVars.CLAIM_FEE,
+  withdrawFee: envVars.WITHDRAW_FEE,
   db: {
     username: envVars.DB_USERNAME,
     password: envVars.DB_PASSWORD,

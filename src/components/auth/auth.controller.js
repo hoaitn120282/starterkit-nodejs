@@ -98,6 +98,8 @@ function login(req, res, next) {
 							if (!token) {
 								return new Error('Empty token');
 							}
+							user.token = token;
+							user.save();
 							return resolve(token);
 						}
 					)
@@ -116,6 +118,7 @@ function login(req, res, next) {
 function register(req, res, next) {
 	const user = new User(req.body);
 	user.publicAddress = user.publicAddress.toLowerCase();
+	user.walletID = user.walletID;
 	// return res.json({ a: user });
 	User.findOne({ where: { publicAddress: user.publicAddress } })
 		.then((foundUser) => {
@@ -127,7 +130,8 @@ function register(req, res, next) {
 		})
 		.then((savedUser) => {
 			return res.json({
-				user: savedUser.safeModel(),
+				nonce: savedUser.nonce,
+				publicAddress: savedUser.publicAddress,
 			});
 		})
 		.catch((e) => next(e));

@@ -57,6 +57,7 @@ const sequelize = new Sequelize(dbDetails.database, dbDetails.username, dbDetail
 sequelize
   .authenticate()
   .then(() => {
+    sequelize.sync({ alter: true });
     debug('Connection has been established successfully.');
   })
   .catch((err) => {

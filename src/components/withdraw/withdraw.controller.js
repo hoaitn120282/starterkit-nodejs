@@ -1,13 +1,13 @@
 const { isEmpty } = require('lodash');
-const Claim = require('./claim.model');
+const Withdraw = require('./withdraw.model');
 const Reward = require('../reward/reward.model');
 const config = require('../../config');
 /**
- * Load Claim and append to req.
+ * Load Withdraw and append to req.
  */
 function load(req, res, next, walletID) {
   const { limit = 50, skip = 0 } = req.query;
-  return Claim.getBywalletID(walletID, { limit, skip })
+  return Withdraw.getBywalletID(walletID, { limit, skip })
     .then((model) => {
       req.model = model;
       return res.json(req.model);
@@ -15,8 +15,8 @@ function load(req, res, next, walletID) {
     .catch((e) => next(e));
 }
 
-function findClaim(req, res, next, id) {
-  return Claim.get(id)
+function findWithdraw(req, res, next, id) {
+  return Withdraw.get(id)
     .then((model) => {
       req.model = model;
       return next();
@@ -25,46 +25,41 @@ function findClaim(req, res, next, id) {
 }
 
 /**
- * Get Claim
- * @returns {Claim}
+ * Get Withdraw
+ * @returns {Withdraw}
  */
 function get(req, res) {
   return res.json(req.model.safeModel());
 }
 
 /**
- * Create claim
+ * Create Withdraw
  * @param {*} req
  * @param {*} res
  * @param {*} next
  */
 function create(req, res, next) {
-  const model = new Claim(req.body);
+  const model = new Withdraw(req.body);
   return model.save()
     .then((savedmodel) => {
       Reward.findOne({
         where: {
           walletID: savedmodel.walletID,
-          rewardType: savedmodel.claimRewardType,
+          rewardType: savedmodel.tokenType,
         },
       })
         .then((reward) => {
-          const balance = (model.claimRewardAmount - ((config.withdrawFee/100)*model.claimRewardAmount));
-          if (!isEmpty(reward)) {
-            const rewardModel = reward;
-            rewardModel.rewardAmount += balance;
-            rewardModel.claimStatus = 'Success';
-            rewardModel.save();
+          const balance = (model.tokenBalance + ((config.withdrawFee / 100) * model.tokenBalance));
+          if (!isEmpty(reward) && parseFloat(reward.rewardAmount) >= parseFloat(balance)) {
+            reward.rewardAmount -= balance;
+            reward.save();
+            model.status = 'Pending';
+            model.save();
+            res.json(savedmodel.safeModel());
           } else {
-            const rewardModel = new Reward();
-            rewardModel.walletID = model.walletID;
-            rewardModel.rewardAmount = balance;
-            rewardModel.rewardType = model.claimRewardType;
-            rewardModel.claimStatus = 'Success';
-            rewardModel.save();
+            res.json({ message: 'Your amount have not enough to withdraw!' });
           }
         });
-      res.json(savedmodel.safeModel());
     })
     .catch((e) => next(e));
 }
@@ -73,18 +68,18 @@ function create(req, res, next) {
  * Get Model list.
  * @property {number} req.query.skip
  * @property {number} req.query.limit
- * @returns {Promise<Claim[]>}
+ * @returns {Promise<Withdraw[]>}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  return Claim.list({ limit, skip })
-    .then((claims) => res.json(claims))
+  return Withdraw.list({ limit, skip })
+    .then((Withdraws) => res.json(Withdraws))
     .catch((e) => next(e));
 }
 
 /**
- * Delete Claim.
- * @returns {Claim}
+ * Delete Withdraw.
+ * @returns {Withdraw}
  */
 function destroy(req, res, next) {
   const { model } = req;
@@ -99,5 +94,5 @@ module.exports = {
   list,
   destroy,
   create,
-  findClaim,
+  findWithdraw,
 };
