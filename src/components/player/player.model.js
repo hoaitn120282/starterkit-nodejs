@@ -21,6 +21,14 @@ const PlayerSchema = {
     allowNull: false,
     type: Sequelize.INTEGER,
   },
+  mana: {
+    allowNull: false,
+    type: Sequelize.INTEGER,
+  },
+  hp: {
+    allowNull: false,
+    type: Sequelize.INTEGER,
+  },
   skinName: {
     allowNull: false,
     type: Sequelize.STRING,
