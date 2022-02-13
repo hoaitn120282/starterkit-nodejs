@@ -17,6 +17,18 @@ const paramValidation = {
       walletID: Joi.string().required(),
     }),
   },
+  bootMana: {
+    body: Joi.object({
+      walletID: Joi.string().required(),
+      mana: Joi.number().required(),
+    }),
+  },
+  bootHp: {
+    body: Joi.object({
+      walletID: Joi.string().required(),
+      hp: Joi.number().required(),
+    }),
+  },
 };
 const router = express.Router();
 /**
@@ -46,7 +58,8 @@ const router = express.Router();
  *       "message": "Your amount not enough to use! please deposit more."
  *     }
  */
-router.route('/randomPlayer')
+router
+  .route('/randomPlayer')
   .get(validate(paramValidation.createRandom), playerCtrl.randomPlayer);
 
 /**
@@ -83,8 +96,7 @@ router.route('/randomPlayer')
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/:walletID')
-  .get(playerCtrl.list);
+router.route('/:walletID').get(playerCtrl.list);
 
 /**
  * @api {post} /players Player Creation
@@ -120,7 +132,8 @@ router.route('/:walletID')
  *       "error": error exception string
  *     }
  */
-router.route('/')
+router
+  .route('/')
   .post(validate(paramValidation.createModel), playerCtrl.createPlayer);
 
 /**
@@ -154,10 +167,79 @@ router.route('/')
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/:playerId')
-  .get(playerCtrl.getProfile);
+router.route('/:playerId').get(playerCtrl.getProfile);
 
 /** Load player when API with walletID route parameter is hit */
 router.param('walletID', playerCtrl.load);
+
+/**
+ * @api {post} /bootMana Boot Mana
+ * @apiVersion 1.0.0
+ * @apiName Boot mana with playerId
+ * @apiGroup Players
+ *
+ * @apiParam {String} walletId Mandatory unique Param.
+ *
+ * @apiSuccess {Object} Model[{}] Item of the player created.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "starNumbers": 190,
+ *       "skinName": 3,
+ *       ...
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router
+  .route('/:playerId/bootMana')
+  .post(validate(paramValidation.bootMana), playerCtrl.bootMana);
+
+/**
+ * @api {post} /bootHp Boot Hp
+ * @apiVersion 1.0.0
+ * @apiName Boot Hp with playerId
+ * @apiGroup Players
+ *
+ * @apiParam {String} walletId Mandatory unique Param.
+ *
+ * @apiSuccess {Object} Model[{}] Item of the player created.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "starNumbers": 190,
+ *       "skinName": 3,
+ *       ...
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router
+  .route('/:playerId/bootHp')
+  .post(validate(paramValidation.bootHp), playerCtrl.bootHp);
 
 module.exports = router;
