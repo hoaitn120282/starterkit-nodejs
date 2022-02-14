@@ -1,6 +1,6 @@
 const express = require('express');
-const expressJwt = require('express-jwt');
-const config = require('../config');
+// const expressJwt = require('express-jwt');
+// const config = require('../config');
 const userRoutes = require('./user/user.routes');
 const rewardRoutes = require('./reward/reward.routes');
 const authRoutes = require('./auth/auth.routes');
@@ -10,6 +10,7 @@ const turnsRoutes = require('./turn/turn.routes');
 const playerRoutes = require('./player/player.routes');
 const withdrawRoutes = require('./withdraw/withdraw.routes');
 const depositRoutes = require('./deposit/deposit.routes');
+const transactionsHistoryRoutes = require('./transactions-history/transactions_history.routes');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -53,5 +54,6 @@ router.use('/turns', turnsRoutes);
 router.use('/players', playerRoutes);
 router.use('/withdraw', withdrawRoutes);
 router.use('/deposit', depositRoutes);
+router.use('/transactions-history', transactionsHistoryRoutes);
 
 module.exports = router;
