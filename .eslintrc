@@ -1,6 +1,7 @@
 {
   "rules": {
-    "indent": [
+    "no-param-reassign": [2, { "props": false }]
+,    "indent": [
       2,
       2,
       {
@@ -35,12 +36,14 @@
   },
   "env": {
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "es6": true
   },
   "parserOptions": {
-    "ecmaVersion": 7,
+    "ecmaVersion": 8,
     "sourceType": "module"
   },
+  
   "extends": [
     "eslint:recommended",
     "airbnb-base"
