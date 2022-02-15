@@ -11,16 +11,13 @@ const config = require("../../config");
  * @returns {Promise<Deposit[]>}
  */
 async function list(req, res, next) {
-    
-  const deposits = await Deposit.findAll();
-  const withdraws = await Withdraw.findAll();
+  const { limit = 50, skip = 0 } = req.query;
+  const deposits = await Deposit.list({ limit: Math.floor(limit / 2), skip });
+  const withdraws = await Withdraw.list({ limit: Math.floor(limit / 2), skip });
 
-  const transactionsHistory = {
-    deposits: deposits,
-    withdraws: withdraws,
-  };
+  const transaction = deposits.concat(withdraws);
 
-  return res.json(transactionsHistory);
+  return res.json(transaction);
 }
 
 module.exports = {
