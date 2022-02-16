@@ -1,8 +1,8 @@
-const { isEmpty } = require("lodash");
-const Deposit = require("../deposit/deposit.model");
-const Withdraw = require("../withdraw/withdraw.model");
+// const { isEmpty } = require("lodash");
+const Deposit = require('../deposit/deposit.model');
+const Withdraw = require('../withdraw/withdraw.model');
 
-const config = require("../../config");
+// const config = require("../../config");
 
 /**
  * Get Transactions History list.
@@ -10,10 +10,17 @@ const config = require("../../config");
  * @property {number} req.query.limit
  * @returns {Promise<Deposit[]>}
  */
-async function list(req, res, next) {
+async function list(req, res) {
+  const { walletID } = req.body;
   const { limit = 50, skip = 0 } = req.query;
-  const deposits = await Deposit.list({ limit: Math.floor(limit / 2), skip });
-  const withdraws = await Withdraw.list({ limit: Math.floor(limit / 2), skip });
+  const deposits = await Deposit.getBywalletID(walletID, {
+    limit: Math.floor(limit / 2),
+    skip,
+  });
+  const withdraws = await Withdraw.getBywalletID(walletID, {
+    limit: Math.floor(limit / 2),
+    skip,
+  });
 
   const transaction = deposits.concat(withdraws);
 

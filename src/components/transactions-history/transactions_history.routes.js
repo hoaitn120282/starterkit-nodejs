@@ -1,11 +1,17 @@
 const express = require('express');
-// const { Joi } = require('express-validation');
+const { Joi } = require('express-validation');
 const modelCtrl = require('./transactions_history.controller');
-// const { validate } = require('../../helpers');
+const { validate } = require('../../helpers');
 
 const router = express.Router();
 
-// const paramValidation = {};
+const paramValidation = {
+  transactionParam: {
+    body: Joi.object({
+      walletID: Joi.string().required(),
+    }),
+  },
+};
 
 /**
  * @api {get} /transactions-history/ Transactions History Listing
@@ -40,7 +46,6 @@ const router = express.Router();
  *     }
  */
 router.route('/')
-  .get(modelCtrl.list);
-
+  .get(validate(paramValidation.transactionParam), modelCtrl.list);
 
 module.exports = router;
