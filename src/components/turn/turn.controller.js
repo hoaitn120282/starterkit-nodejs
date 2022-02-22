@@ -1,5 +1,6 @@
 const { isEmpty } = require('lodash');
 const Turn = require('./turn.model');
+const Player = require('../player/player.model')
 
 /**
  * Load Turn and append to req.
@@ -8,6 +9,7 @@ function load(req, res, next, walletID) {
   return Turn.getBywalletID(walletID)
     .then((model) => {
       if (isEmpty(model)) {
+        
         const obj = new Turn();
         obj.walletID = walletID;
         obj.turnNumber = 0;
@@ -26,21 +28,43 @@ function load(req, res, next, walletID) {
  * Get Turn
  * @returns {Turn}
  */
-function get(req, res, next) {
+ function get(req, res, next) {
   const wallet = req.params.walletID;
   return Turn.getBywalletID(wallet)
-    .then((model) => {
+    .then(async( model) => {
       if (isEmpty(model)) {
+        const player = await Player.getByWalletId(wallet);        
         const obj = new Turn();
         obj.walletID = wallet;
         obj.turnNumber = 0;
-        obj.turnLimit = 5;
+        obj.turnLimit = checkTurn(player.starNumber);
         obj.save();
         res.json(obj);
       }
       res.json(model);
     })
     .catch((e) => next(e));
+}
+
+/**
+ * Check turn by starNumber 
+ * 
+ */
+const checkTurn = (starNumber) => {
+  switch (starNumber) {
+    case 1:
+      return 4;
+    case 2:
+      return 5;
+    case 3:
+      return 7;
+    case 4:
+      return 10;
+    case 5:
+      return 14;
+    default:
+      return 5;
+  }
 }
 
 /**

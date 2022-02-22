@@ -169,6 +169,39 @@ router
  */
 router.route('/:playerId').get(playerCtrl.getProfile);
 
+/**
+ * @api {get} /players/detailPlayer/:playerId Player Detail
+ * @apiVersion 1.0.0
+ * @apiName Get player detail by Id
+ * @apiGroup Players
+ *
+ * @apiParam {String} playerId Mandatory unique Param.
+ *
+ * @apiSuccess {Object} Model[{}] Profile of the Player.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "starNumbers": 190,
+ *       "skinName": 3,
+ *       ...
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ * @apiError PlayerNotFound Data is not exist.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "Data is not exist"
+ *     }
+ */
+ router.route('/detailPlayer/:playerId').get(playerCtrl.getDetailPlayer);
+
 /** Load player when API with walletID route parameter is hit */
 router.param('walletID', playerCtrl.load);
 

@@ -144,6 +144,19 @@ async function bootHp(req, res, next) {
     .catch((e) => next(e));
 }
 
+
+/**
+ * Get detail player by Id.
+ * @returns {Player}
+ */
+ async function getDetailPlayer(req, res, next) {
+  const { playerId } = req.params;
+
+  return Player.getByID(playerId)
+    .then((player) => res.json(player))
+    .catch((e) => next(e));
+}
+
 module.exports = {
   load,
   get,
@@ -154,4 +167,5 @@ module.exports = {
   randomPlayer,
   bootMana,
   bootHp,
+  getDetailPlayer
 };
