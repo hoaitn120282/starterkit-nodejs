@@ -20,7 +20,8 @@
     "predev": "cross-env NODE_ENV=development npm run db:migrate",
     "prestart": "npm run db:migrate",
     "start": "node src",
-    "start:debug": "cross-env DEBUG=node-server:* npm start"
+    "start:debug": "cross-env DEBUG=node-server:* npm start",
+    "docs": "apidoc -i apidoc/ -o apidoc"
   },
   "repository": {
     "type": "git",

@@ -118,12 +118,39 @@ async function bootMana(req, res, next) {
   const { mana } = req.body;
   const player = await Player.findOne({ where: { id: playerId } });
 
-  player.mana += mana;
+  const newMana = checkMana(player.starNumber);
+  const manaAdd = newMana - player.mana;
+
+  console.log('player',player.starNumber,player.mana, '-', manaAdd);
+
+
+  // player.mana += mana;
 
   return player
     .save()
     .then((savedPlayer) => res.json(savedPlayer.safeModel()))
     .catch((e) => next(e));
+}
+
+/**
+ * Check turn by starNumber 
+ * 
+ */
+ const checkMana = (starNumber) => {
+  switch (starNumber) {
+    case 1:
+      return 100;
+    case 2:
+      return 125;
+    case 3:
+      return 175;
+    case 4:
+      return 250;
+    case 5:
+      return 350;
+    default:
+      return 0;
+  }
 }
 
 /**
