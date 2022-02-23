@@ -20,7 +20,7 @@ const paramValidation = {
   bootMana: {
     body: Joi.object({
       walletID: Joi.string().required(),
-      mana: Joi.number().required(),
+      // mana: Joi.number().required(),
     }),
   },
   bootHp: {
@@ -200,13 +200,13 @@ router.route('/:playerId').get(playerCtrl.getProfile);
  *       "error": "Data is not exist"
  *     }
  */
- router.route('/detailPlayer/:playerId').get(playerCtrl.getDetailPlayer);
+router.route('/detailPlayer/:playerId').get(playerCtrl.getDetailPlayer);
 
 /** Load player when API with walletID route parameter is hit */
 router.param('walletID', playerCtrl.load);
 
 /**
- * @api {post} /bootMana Boot Mana
+ * @api {post} /:playerId/bootMana Boot Mana
  * @apiVersion 1.0.0
  * @apiName Boot mana with playerId
  * @apiGroup Players
