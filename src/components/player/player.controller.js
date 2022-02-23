@@ -1,4 +1,5 @@
 const Player = require('./player.model');
+const Reward = require('../reward/reward.model');
 const Models = require('../models');
 const { getRandomInt, getRandomName } = require('../../helpers');
 
@@ -110,33 +111,10 @@ function destroy(req, res, next) {
 }
 
 /**
- * Boot Mana.
- * @returns {Player}
+ * Check turn by starNumber
+ *
  */
-async function bootMana(req, res, next) {
-  const { playerId } = req.params;
-  const { mana } = req.body;
-  const player = await Player.findOne({ where: { id: playerId } });
-
-  const newMana = checkMana(player.starNumber);
-  const manaAdd = newMana - player.mana;
-
-  console.log('player',player.starNumber,player.mana, '-', manaAdd);
-
-
-  // player.mana += mana;
-
-  return player
-    .save()
-    .then((savedPlayer) => res.json(savedPlayer.safeModel()))
-    .catch((e) => next(e));
-}
-
-/**
- * Check turn by starNumber 
- * 
- */
- const checkMana = (starNumber) => {
+const checkMana = (starNumber) => {
   switch (starNumber) {
     case 1:
       return 100;
@@ -151,6 +129,59 @@ async function bootMana(req, res, next) {
     default:
       return 0;
   }
+};
+
+/**
+ * Check TOC for boot mana
+ *
+ */
+const checkToc = (starNumber, manaAdd) => {
+  switch (starNumber) {
+    case 1:
+      return (30 * manaAdd) / 100;
+    case 2:
+      return (37.5 * manaAdd) / 125;
+    case 3:
+      return (52.5 * manaAdd) / 175;
+    case 4:
+      return (75 * manaAdd) / 250;
+    case 5:
+      return (105 * manaAdd) / 350;
+    default:
+      return 0;
+  }
+};
+
+/**
+ * Boot Mana.
+ * @returns {Player}
+ */
+async function bootMana(req, res, next) {
+  const { playerId } = req.params;
+  const { walletID } = req.body;
+  const player = await Player.findOne({ where: { id: playerId, walletID } });
+
+  const newMana = checkMana(player.starNumber);
+  const manaAdd = newMana - player.mana;
+  const reward = await Reward.findOne({
+    where: { walletID: player.walletID, rewardType: 'TOC' },
+  });
+
+  const newToc = checkToc(player.starNumber, manaAdd);
+  // console.log("reward", reward.rewardAmount, newToc);
+
+  if (newToc > reward.rewardAmount) {
+    return res.json({
+      message: 'Your amount not enough to use! please deposit more.',
+    });
+  }
+  reward.rewardAmount -= newToc;
+  player.mana = newMana;
+  reward.save();
+  return player
+    .save()
+    .then((savedPlayer) => res.json(savedPlayer.safeModel()))
+    .catch((e) => next(e));
 }
 
 /**
@@ -171,12 +202,11 @@ async function bootHp(req, res, next) {
     .catch((e) => next(e));
 }
 
-
 /**
  * Get detail player by Id.
  * @returns {Player}
  */
- async function getDetailPlayer(req, res, next) {
+async function getDetailPlayer(req, res, next) {
   const { playerId } = req.params;
 
   return Player.getByID(playerId)
@@ -194,5 +224,5 @@ module.exports = {
   randomPlayer,
   bootMana,
   bootHp,
-  getDetailPlayer
+  getDetailPlayer,
 };
