@@ -25,7 +25,7 @@ const UserSchema = {
     unique: true,
   },
   walletID: {
-    allowNull: false,
+    allowNull: true,
     type: Sequelize.STRING,
   },
   token: {
