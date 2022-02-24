@@ -21,7 +21,7 @@
     "prestart": "npm run db:migrate",
     "start": "node src",
     "start:debug": "cross-env DEBUG=node-server:* npm start",
-    "docs": "apidoc -i apidoc/ -o apidoc"
+    "docs": "apidoc -i src -o apidoc"
   },
   "repository": {
     "type": "git",

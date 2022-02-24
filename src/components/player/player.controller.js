@@ -161,6 +161,12 @@ async function bootMana(req, res, next) {
   const { walletID } = req.body;
   const player = await Player.findOne({ where: { id: playerId, walletID } });
 
+  if(!player){
+    return res.json({
+      message: 'Player not found!',
+    });
+  }
+
   const newMana = checkMana(player.starNumber);
   const manaAdd = newMana - player.mana;
   const reward = await Reward.findOne({
