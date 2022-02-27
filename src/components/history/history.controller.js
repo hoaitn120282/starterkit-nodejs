@@ -1,6 +1,7 @@
-const { isEmpty } = require('lodash');
-const History = require('./hisroty.model');
-const Models = require('../models');
+const { sequelize } = require("../../config/db");
+const { isEmpty } = require("lodash");
+const History = require("./history.model");
+const Models = require("../models");
 
 /**
  * Load History and append to req.
@@ -31,18 +32,29 @@ function get(req, res) {
  */
 function create(req, res, next) {
   const model = new History(req.body);
-
-  return model.save()
+  return model
+    .save()
     .then((savedmodel) => {
       Models.Player.findOne({
-        where: { walletID: savedmodel.walletID },
+        where: { walletID: savedmodel.walletID, id: req.body.playerID },
       }).then((player) => {
         if (!isEmpty(player)) {
           const playerObj = player;
           playerObj.totalExp += savedmodel.expNumber;
           playerObj.save();
         } else {
-          res.json({ message: 'Player does not exsit!' });
+          res.json({ message: "Player does not exsit!" });
+        }
+      });
+      Models.Reward.findOne({
+        where: { walletID: savedmodel.walletID, rewardType: req.body.rewardType },
+      }).then((reward) => {
+        if (!isEmpty(reward)) {
+          const rewardObj = reward;
+          rewardObj.rewardAmount += req.body.rewardNumber;
+          rewardObj.save();
+        } else {
+          res.json({ message: "Reward does not exsit!" });
         }
       });
       res.json(savedmodel.safeModel());
@@ -69,7 +81,8 @@ function list(req, res, next) {
  */
 function destroy(req, res, next) {
   const { model } = req;
-  model.destroy()
+  model
+    .destroy()
     .then((deletedModel) => res.json(deletedModel.safeModel()))
     .catch((e) => next(e));
 }

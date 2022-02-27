@@ -20,6 +20,7 @@ const paramValidation = {
  * @apiGroup Transactions History
  *
  *
+ * @apiParam {String} walletID Mandatory unique Param.
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:

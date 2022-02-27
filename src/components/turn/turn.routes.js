@@ -25,6 +25,30 @@ const paramValidation = {
   },
 };
 
+/**
+ * @api {get} /turns/ Turns Listing
+ * @apiVersion 1.0.0
+ * @apiName Get the list of Turns
+ * @apiGroup Turns
+ *
+ * * @apiSuccess {Object} Model[{}] List items of the History.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       }
+ *     ]
+ *
+ * @apiError HistoryNotFound Data is not exist.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "Data is not exist"
+ *     }
+ */
 router.route('/')
   .get(modelCtrl.list)
 

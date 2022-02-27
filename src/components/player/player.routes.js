@@ -137,7 +137,7 @@ router
   .post(validate(paramValidation.createModel), playerCtrl.createPlayer);
 
 /**
- * @api {get} /players/:playerId Player Detail
+ * @api {get} /players/:playerId Players by WalltedId
  * @apiVersion 1.0.0
  * @apiName Get player detail via wallet ID
  * @apiGroup Players
@@ -170,7 +170,7 @@ router
 router.route('/:playerId').get(playerCtrl.getProfile);
 
 /**
- * @api {get} /players/detailPlayer/:playerId Player Detail
+ * @api {get} /players/detailPlayer/:playerId Player Detail by Id
  * @apiVersion 1.0.0
  * @apiName Get player detail by Id
  * @apiGroup Players
