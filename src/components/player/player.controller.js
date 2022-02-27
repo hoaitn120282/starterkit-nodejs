@@ -1,7 +1,8 @@
-const Player = require('./player.model');
-const Reward = require('../reward/reward.model');
-const Models = require('../models');
-const { getRandomInt, getRandomName } = require('../../helpers');
+const { sequelize } = require("../../config/db");
+const Player = require("./player.model");
+const Reward = require("../reward/reward.model");
+const Models = require("../models");
+const { getRandomInt, getRandomName } = require("../../helpers");
 
 /**
  * Load Player and append to req.
@@ -65,7 +66,7 @@ function randomPlayer(req, res) {
   return Models.Reward.findOne({
     where: {
       walletID: req.body.walletID || null,
-      rewardType: 'SNCT',
+      rewardType: "SNCT",
     },
   })
     .then((reward) => {
@@ -76,13 +77,13 @@ function randomPlayer(req, res) {
         skinName = getRandomName();
       } else {
         res.json({
-          message: 'Your amount not enough to use! please deposit more.',
+          message: "Your amount not enough to use! please deposit more.",
         });
       }
       res.json({ starNumber, skinName });
     })
     .catch(() => {
-      res.json({ message: 'Something went wrong!' });
+      res.json({ message: "Something went wrong!" });
     });
 }
 /**
@@ -161,16 +162,16 @@ async function bootMana(req, res, next) {
   const { walletID } = req.body;
   const player = await Player.findOne({ where: { id: playerId, walletID } });
 
-  if(!player){
+  if (!player) {
     return res.json({
-      message: 'Player not found!',
+      message: "Player not found!",
     });
   }
 
   const newMana = checkMana(player.starNumber);
   const manaAdd = newMana - player.mana;
   const reward = await Reward.findOne({
-    where: { walletID: player.walletID, rewardType: 'TOC' },
+    where: { walletID: player.walletID, rewardType: "TOC" },
   });
 
   const newToc = checkToc(player.starNumber, manaAdd);
@@ -178,16 +179,29 @@ async function bootMana(req, res, next) {
 
   if (newToc > reward.rewardAmount) {
     return res.json({
-      message: 'Your amount not enough to use! please deposit more.',
+      message: "Your amount not enough to use! please deposit more.",
     });
   }
   reward.rewardAmount -= newToc;
   player.mana = newMana;
-  reward.save();
-  return player
-    .save()
-    .then((savedPlayer) => res.json(savedPlayer.safeModel()))
-    .catch((e) => next(e));
+
+  // reward.save();
+  // return player
+  //   .save()
+  //   .then((savedPlayer) => res.json(savedPlayer.safeModel()))
+  //   .catch((e) => next(e));
+
+  const transaction = await sequelize.transaction();
+  try {
+    await reward.save();
+    await player.save();
+    await transaction.commit();
+
+    return res.json(player.safeModel());
+  } catch (error) {
+    await transaction.rollback();
+    next(error);
+  }
 }
 
 /**

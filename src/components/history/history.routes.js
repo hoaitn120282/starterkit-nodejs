@@ -21,6 +21,7 @@ const paramValidation = {
   createModel: {
     body: Joi.object({
       walletID: Joi.string().required(),
+      playerID: Joi.number().required(),
       rewardNumber: Joi.number(),
       expNumber: Joi.number(),
       rewardType: Joi.string(),
@@ -73,6 +74,7 @@ router.route('/')
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} playerID Mandatory unique Param.
  * @apiParam {Integer} rewardNumber Mandatory Reward number in play session.
  * @apiParam {Integer} expNumber Mandatory Experience number in play session.
  * @apiParam {String} rewardType Mandatory The of token reward won in game.
