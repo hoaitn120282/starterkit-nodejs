@@ -1,4 +1,4 @@
-const Reward = require('./reward.model');
+const Reward = require("./reward.model");
 
 /**
  * Load reward and append to req.
@@ -37,7 +37,8 @@ function getProfile(req, res, next) {
  */
 function create(req, res, next) {
   const reward = new Reward(req.body);
-  return reward.save()
+  return reward
+    .save()
     .then((savedReward) => res.json(savedReward.safeModel()))
     .catch((e) => next(e));
 }
@@ -60,7 +61,8 @@ function update(req, res, next) {
   reward.totalExp = req.body.totalExp;
   reward.rewardType = req.body.rewardType;
 
-  return reward.save()
+  return reward
+    .save()
     .then((savedReward) => res.json(savedReward.safeModel()))
     .catch((e) => next(e));
 }
@@ -84,8 +86,30 @@ function list(req, res, next) {
  */
 function destroy(req, res, next) {
   const { reward } = req;
-  reward.destroy()
+  reward
+    .destroy()
     .then((deletedReward) => res.json(deletedReward.safeModel()))
+    .catch((e) => next(e));
+}
+
+/**
+ * List Top reward
+ * @returns {Reward}
+ */
+function listTopReward(req, res, next) {
+  const { limit = 50, skip = 0, start, end } = req.query;
+  return Reward.list({
+    skip,
+    limit,
+    where: {
+      rewardType: "TOC",
+      updatedAt: {
+        $between: [start, end],
+      },
+    },
+    order: [["rewardAmount", "DESC"]],
+  })
+    .then((rewards) => res.json(rewards))
     .catch((e) => next(e));
 }
 
@@ -97,4 +121,5 @@ module.exports = {
   list,
   destroy,
   create,
+  listTopReward,
 };

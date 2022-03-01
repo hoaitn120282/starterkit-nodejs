@@ -1,7 +1,7 @@
-const express = require('express');
-const { Joi } = require('express-validation');
-const modelCtrl = require('./history.controller');
-const { validate } = require('../../helpers');
+const express = require("express");
+const { Joi } = require("express-validation");
+const modelCtrl = require("./history.controller");
+const { validate } = require("../../helpers");
 
 const router = express.Router();
 
@@ -65,8 +65,7 @@ const paramValidation = {
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/')
-  .get(modelCtrl.list);
+router.route("/").get(modelCtrl.list);
 /**
  * @api {post} /play-history History Creation
  * @apiVersion 1.0.0
@@ -104,14 +103,41 @@ router.route('/')
  *       "error": error exception string
  *     }
  */
-router.route('/')
-  .post(validate(paramValidation.createModel), modelCtrl.create);
+router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
 
-router.route('/:id')
+/**
+ * @api {post} /play-history/top-reward-toc Top reward TOC
+ * @apiVersion 1.0.0
+ * @apiName List top reward TOC
+ * @apiGroup Play History
+ *
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ * @apiParam {Datetime} start Start time.
+ * @apiParam {Datetime} end End time.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "1",
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router.route("/top-reward-toc").get(modelCtrl.listTopReward);
+
+router
+  .route("/:id")
   .get(modelCtrl.get)
 
   .delete(modelCtrl.destroy);
 
-router.param('id', modelCtrl.load);
+router.param("id", modelCtrl.load);
 
 module.exports = router;

@@ -1,8 +1,8 @@
-const Sequelize = require('sequelize');
-const httpStatus = require('http-status');
-const _ = require('lodash');
-const db = require('../../config/db');
-const APIError = require('../../helpers/APIError');
+const Sequelize = require("sequelize");
+const httpStatus = require("http-status");
+const _ = require("lodash");
+const db = require("../../config/db");
+const APIError = require("../../helpers/APIError");
 
 /**
  * Reward Schema
@@ -17,7 +17,6 @@ const RewardSchema = {
   walletID: {
     type: Sequelize.STRING,
     allowNull: false,
-
   },
   rewardAmount: {
     type: Sequelize.FLOAT,
@@ -36,7 +35,7 @@ const RewardSchema = {
   },
 };
 
-const Rewards = db.sequelize.define('reward', RewardSchema);
+const Rewards = db.sequelize.define("reward", RewardSchema);
 
 /**
  * Statics
@@ -48,14 +47,17 @@ const Rewards = db.sequelize.define('reward', RewardSchema);
  * @returns {Promise<Reward, APIError>}
  */
 Rewards.get = function get(id) {
-  return this.findByPk(id)
-    .then((reward) => {
-      if (reward) {
-        return reward;
-      }
-      const err = new APIError('No such Record exists!', httpStatus.NOT_FOUND, true);
-      return Promise.reject(err);
-    });
+  return this.findByPk(id).then((reward) => {
+    if (reward) {
+      return reward;
+    }
+    const err = new APIError(
+      "No such Record exists!",
+      httpStatus.NOT_FOUND,
+      true
+    );
+    return Promise.reject(err);
+  });
 };
 
 /**
@@ -64,11 +66,12 @@ Rewards.get = function get(id) {
  * @param {number} limit - Limit number of Rewards to be returned.
  * @returns {Promise<Reward[]>}
  */
-Rewards.list = function list({ skip = 0, limit = 50 } = {}) {
+Rewards.list = function list({ skip = 0, limit = 50, where, order } = {}) {
   return this.findAll({
     limit,
     offset: skip,
-    $sort: { id: 1 },
+    where,
+    order,
   });
 };
 
@@ -85,7 +88,7 @@ Rewards.getBywalletID = function getBywalletID(wallet) {
  * @returns {object} - Public information of Rewards.
  */
 Rewards.prototype.safeModel = function safeModel() {
-  return _.omit(this.toJSON(), ['password']);
+  return _.omit(this.toJSON(), ["password"]);
 };
 
 /**

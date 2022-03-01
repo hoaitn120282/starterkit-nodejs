@@ -1,7 +1,7 @@
-const express = require('express');
-const { Joi } = require('express-validation');
-const playerCtrl = require('./player.controller');
-const { validate } = require('../../helpers');
+const express = require("express");
+const { Joi } = require("express-validation");
+const playerCtrl = require("./player.controller");
+const { validate } = require("../../helpers");
 
 const paramValidation = {
   createModel: {
@@ -59,44 +59,8 @@ const router = express.Router();
  *     }
  */
 router
-  .route('/randomPlayer')
+  .route("/randomPlayer")
   .get(validate(paramValidation.createRandom), playerCtrl.randomPlayer);
-
-/**
- * @api {get} /players/:walletID Players Listing
- * @apiVersion 1.0.0
- * @apiName Get the list of players via wallet ID
- * @apiGroup Players
- *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
- *
- * @apiSuccess {Object} Model[{}] List items of the Players.
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *      {
- *       "id": "2",
- *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
- *       "starNumber": 5,
- *       "skinName": "Bananas",
- *       ...
- *       "createdAt": "2022-01-04T19:17:17.089Z",
- *       "updatedAt": "2022-01-04T19:17:17.089Z"
- *       }
- *     ]
- *
- * @apiError PlayerNotFound Data is not exist.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "Data is not exist"
- *     }
- */
-router.route('/:walletID').get(playerCtrl.list);
 
 /**
  * @api {post} /players Player Creation
@@ -133,8 +97,43 @@ router.route('/:walletID').get(playerCtrl.list);
  *     }
  */
 router
-  .route('/')
+  .route("/")
   .post(validate(paramValidation.createModel), playerCtrl.createPlayer);
+
+/**
+ * @api {get} /players/top-exp Top exp Listing
+ * @apiVersion 1.0.0
+ * @apiName Top exp Listing
+ * @apiGroup Players
+ *
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ * @apiParam {Datetime} start Start time.
+ * @apiParam {Datetime} end End time.
+ * @apiSuccess {Object} Model[{}] Item of the player created.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "starNumbers": 190,
+ *       "skinName": 3,
+ *       ...
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router.route("/top-exp").get(playerCtrl.listTopExp);
 
 /**
  * @api {get} /players/:playerId Players by WalltedId
@@ -167,7 +166,7 @@ router
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/:playerId').get(playerCtrl.getProfile);
+// router.route("/:playerId").get(playerCtrl.getProfile);
 
 /**
  * @api {get} /players/detailPlayer/:playerId Player Detail by Id
@@ -200,13 +199,10 @@ router.route('/:playerId').get(playerCtrl.getProfile);
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/detailPlayer/:playerId').get(playerCtrl.getDetailPlayer);
-
-/** Load player when API with walletID route parameter is hit */
-router.param('walletID', playerCtrl.load);
+router.route("/detailPlayer/:playerId").get(playerCtrl.getDetailPlayer);
 
 /**
- * @api {post} /:playerId/bootMana Boot Mana
+ * @api {post} /players/:playerId/bootMana Boot Mana
  * @apiVersion 1.0.0
  * @apiName Boot mana with playerId
  * @apiGroup Players
@@ -237,11 +233,11 @@ router.param('walletID', playerCtrl.load);
  *     }
  */
 router
-  .route('/:playerId/bootMana')
+  .route("/:playerId/bootMana")
   .post(validate(paramValidation.bootMana), playerCtrl.bootMana);
 
 /**
- * @api {post} /bootHp Boot Hp
+ * @api {post} /players/bootHp Boot Hp
  * @apiVersion 1.0.0
  * @apiName Boot Hp with playerId
  * @apiGroup Players
@@ -272,7 +268,46 @@ router
  *     }
  */
 router
-  .route('/:playerId/bootHp')
+  .route("/:playerId/bootHp")
   .post(validate(paramValidation.bootHp), playerCtrl.bootHp);
+
+/**
+ * @api {get} /players/:walletID Players Listing
+ * @apiVersion 1.0.0
+ * @apiName Get the list of players via wallet ID
+ * @apiGroup Players
+ *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ *
+ * @apiSuccess {Object} Model[{}] List items of the Players.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "starNumber": 5,
+ *       "skinName": "Bananas",
+ *       ...
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
+ *     ]
+ *
+ * @apiError PlayerNotFound Data is not exist.
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "Data is not exist"
+ *     }
+ */
+router.route("/:walletID").get(playerCtrl.list);
+
+/** Load player when API with walletID route parameter is hit */
+router.param("walletID", playerCtrl.load);
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const { sequelize } = require("../../config/db");
 const { isEmpty } = require("lodash");
 const History = require("./history.model");
+const Player = require("../player/player.model");
 const Models = require("../models");
 
 /**
@@ -47,7 +48,10 @@ function create(req, res, next) {
         }
       });
       Models.Reward.findOne({
-        where: { walletID: savedmodel.walletID, rewardType: req.body.rewardType },
+        where: {
+          walletID: savedmodel.walletID,
+          rewardType: req.body.rewardType,
+        },
       }).then((reward) => {
         if (!isEmpty(reward)) {
           const rewardObj = reward;
@@ -87,10 +91,42 @@ function destroy(req, res, next) {
     .catch((e) => next(e));
 }
 
+/**
+ * List Top history reward
+ * @returns {History}
+ */
+function listTopReward(req, res, next) {
+  const { limit = 50, skip = 0, start, end } = req.query;
+  return History.listHistoryTop({
+    skip,
+    limit,
+    where: {
+      createdAt: {
+        $between: [start, end],
+      },
+    },
+    group: ["playerID", "player.id"],
+    attributes: [
+      "playerID",
+      [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+    ],
+    include: [
+      {
+        model: Player,
+        // as: "player",
+        // attributes: [["id", "playerID"], "walletID", "starNumber"],
+      },
+    ],
+  })
+    .then((historys) => res.json(historys))
+    .catch((e) => next(e));
+}
+
 module.exports = {
   load,
   get,
   list,
   destroy,
   create,
+  listTopReward,
 };

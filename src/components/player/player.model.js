@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
-const bcrypt = require('bcrypt-nodejs');
-const _ = require('lodash');
-const db = require('../../config/db');
+const Sequelize = require("sequelize");
+const bcrypt = require("bcrypt-nodejs");
+const _ = require("lodash");
+const db = require("../../config/db");
 
 /**
  * Player Schema
@@ -67,7 +67,7 @@ const PlayerSchema = {
   },
 };
 
-const Player = db.sequelize.define('players', PlayerSchema);
+const Player = db.sequelize.define("players", PlayerSchema);
 
 /**
  * Statics
@@ -86,6 +86,24 @@ Player.get = function get({ skip = 0, limit = 50, walletID = null } = {}) {
     limit,
     offset: skip,
     $sort: { id: 1 },
+  });
+};
+
+/**
+ * Get top play's exp
+ * @returns {Promise<Player, APIError>}
+ */
+Player.getListExp = function getListExp({
+  skip = 0,
+  limit = 50,
+  where = {},
+  order = [],
+} = {}) {
+  return this.findAll({
+    limit,
+    offset: skip,
+    where,
+    order,
   });
 };
 
@@ -146,7 +164,7 @@ Player.prototype.validPassword = function validPassword(password) {
  * @returns {object} - Public information of player.
  */
 Player.prototype.safeModel = function safeModel() {
-  return _.omit(this.toJSON(), ['password']);
+  return _.omit(this.toJSON(), ["password"]);
 };
 
 /**

@@ -1,7 +1,7 @@
-const express = require('express');
-const { Joi } = require('express-validation');
-const modelCtrl = require('./reward.controller');
-const { validate } = require('../../helpers');
+const express = require("express");
+const { Joi } = require("express-validation");
+const modelCtrl = require("./reward.controller");
+const { validate } = require("../../helpers");
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -31,13 +31,43 @@ const paramValidation = {
   },
 };
 
-router.route('/')
+router
+  .route("/")
 
   .get(modelCtrl.list)
 
   .post(validate(paramValidation.createModel), modelCtrl.create);
 
-router.route('/:walletID')
+
+/**
+ * @api {post} /rewards/top-reward-toc Top reward TOC
+ * @apiVersion 1.0.0
+ * @apiName List top reward TOC
+ * @apiGroup Reward
+ *
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
+ * @apiParam {Datetime} start Start time
+ * @apiParam {Datetime} end End time
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *      {
+ *       "id": "1",
+ *     ]
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": error exception string
+ *     }
+ */
+router.route("/top-reward-toc").get(modelCtrl.listTopReward);
+
+router
+  .route("/:walletID")
 
   .get(modelCtrl.get)
 
@@ -45,6 +75,7 @@ router.route('/:walletID')
 
   .delete(modelCtrl.destroy);
 
-router.param('walletID', modelCtrl.load);
+router.param("walletID", modelCtrl.load);
+
 
 module.exports = router;
