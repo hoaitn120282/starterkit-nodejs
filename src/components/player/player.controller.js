@@ -175,7 +175,6 @@ async function bootMana(req, res, next) {
   });
 
   const newToc = checkToc(player.starNumber, manaAdd);
-  // console.log("reward", reward.rewardAmount, newToc);
 
   if (newToc > reward.rewardAmount) {
     return res.json({
@@ -234,6 +233,26 @@ async function getDetailPlayer(req, res, next) {
     .catch((e) => next(e));
 }
 
+/**
+ * List Top player exp
+ * @returns {Player}
+ */
+async function listTopExp(req, res, next) {
+  const { limit = 50, skip = 0, start, end } = req.query;
+  return Player.getListExp({
+    skip,
+    limit,
+    where: {
+      createdAt: {
+        $between: [start, end],
+      },
+    },
+    order: [["totalExp", "DESC"]],
+  })
+    .then((historys) => res.json(historys))
+    .catch((e) => next(e));
+}
+
 module.exports = {
   load,
   get,
@@ -245,4 +264,5 @@ module.exports = {
   bootMana,
   bootHp,
   getDetailPlayer,
+  listTopExp,
 };
