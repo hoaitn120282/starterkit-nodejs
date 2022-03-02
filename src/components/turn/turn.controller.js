@@ -34,7 +34,7 @@ function load(req, res, next, walletID, playerID) {
         const obj = new Turn();
         obj.walletID = walletID;
         obj.turnNumber = 0;
-        obj.turnLimit = checkTurn(player?.starNumber);
+        obj.turnLimit = checkTurn(player.starNumber);
 
         obj.save();
         req.model = obj;
@@ -61,7 +61,7 @@ function get(req, res, next) {
         obj.walletID = wallet;
         obj.turnNumber = 0;
         obj.playerID = playerID;
-        obj.turnLimit = checkTurn(player?.starNumber);
+        obj.turnLimit = checkTurn(player.starNumber);
         obj.save();
         res.json(obj);
       }
@@ -92,7 +92,7 @@ async function create(req, res, next) {
   } = req.body;
 
   const player = await Player.getById(playerID);
-  model.turnLimit = checkTurn(player?.starNumber);
+  model.turnLimit = checkTurn(player.starNumber);
   model.turnNumber = 0;
   return model
     .save()
