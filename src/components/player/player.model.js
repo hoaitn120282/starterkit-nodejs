@@ -137,6 +137,14 @@ Player.getByWalletId = function WalletId(walletID) {
   });
 };
 
+Player.getById = function getById(id) {
+  return this.findOne({
+    where: {
+      id,
+    },
+  });
+};
+
 /**
  * Methods
  */

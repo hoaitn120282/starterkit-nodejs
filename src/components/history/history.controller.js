@@ -47,20 +47,20 @@ function create(req, res, next) {
           res.json({ message: "Player does not exsit!" });
         }
       });
-      Models.Reward.findOne({
-        where: {
-          walletID: savedmodel.walletID,
-          rewardType: req.body.rewardType,
-        },
-      }).then((reward) => {
-        if (!isEmpty(reward)) {
-          const rewardObj = reward;
-          rewardObj.rewardAmount += req.body.rewardNumber;
-          rewardObj.save();
-        } else {
-          res.json({ message: "Reward does not exsit!" });
-        }
-      });
+      // Models.Reward.findOne({
+      //   where: {
+      //     walletID: savedmodel.walletID,
+      //     rewardType: req.body.rewardType,
+      //   },
+      // }).then((reward) => {
+      //   if (!isEmpty(reward)) {
+      //     const rewardObj = reward;
+      //     rewardObj.rewardAmount += req.body.rewardNumber;
+      //     rewardObj.save();
+      //   } else {
+      //     res.json({ message: "Reward does not exsit!" });
+      //   }
+      // });
       res.json(savedmodel.safeModel());
     })
     .catch((e) => next(e));
