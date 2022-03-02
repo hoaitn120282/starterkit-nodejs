@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 const debug = require('debug')('node-server:db');
 const config = require('./index');
-const Op = Sequelize.Op;
+
+const { Op } = Sequelize;
 
 const operators = {
   $eq: Op.eq,
@@ -44,6 +45,7 @@ const { db: dbDetails } = config;
 const sequelize = new Sequelize(dbDetails.database, dbDetails.username, dbDetails.password, {
   host: dbDetails.host,
   dialect: dbDetails.dialect,
+  schema: 'snakecity',
   pool: {
     max: 5,
     min: 0,
