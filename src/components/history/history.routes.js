@@ -66,6 +66,7 @@ const paramValidation = {
  *     }
  */
 router.route("/").get(modelCtrl.list);
+
 /**
  * @api {post} /play-history History Creation
  * @apiVersion 1.0.0
@@ -77,7 +78,7 @@ router.route("/").get(modelCtrl.list);
  * @apiParam {Integer} rewardNumber Mandatory Reward number in play session.
  * @apiParam {Integer} expNumber Mandatory Experience number in play session.
  * @apiParam {String} rewardType Mandatory The of token reward won in game.
- * @apiParam {activityName} Mandatory Activity name of play session.
+ * @apiParam {activityName} Mandatory Activity name of play session: pvp or pve.
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *
