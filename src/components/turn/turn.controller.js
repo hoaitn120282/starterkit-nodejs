@@ -31,6 +31,9 @@ function load(req, res, next, walletID, playerID, playType) {
     .then(async (model) => {
       if (isEmpty(model)) {
         const player = await Player.getById(playerID);
+        if(!player){
+          return res.json({ err: "Player is not exist!" });
+        }
         const obj = new Turn();
         obj.walletID = walletID;
         obj.turnNumber = 0;
@@ -61,6 +64,9 @@ function get(req, res, next) {
     .then(async (model) => {
       if (isEmpty(model)) {
         const player = await Player.getById(playerID);
+        if(!player){
+          return res.json({ err: "Player is not exist!" });
+        }
         const obj = new Turn();
         obj.walletID = wallet;
         obj.turnNumber = 0;
@@ -100,6 +106,10 @@ async function create(req, res, next) {
   const { playerID, playType } = req.body;
 
   const player = await Player.getById(playerID);
+  if(!player){
+    return res.json({ err: "Player is not exist!" });
+  }
+
   if(playType === "PVP"){
     model.turnLimit = 5;
   }else{
@@ -141,7 +151,7 @@ function update(req, res, next) {
         model.save();
         res.json(model.safeModel());
       } else {
-        res.json({ err: "record is not exist!" });
+        res.json({ err: "Record is not exist!" });
       }
     })
     .catch((e) => next(e));
