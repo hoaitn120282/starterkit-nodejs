@@ -26,16 +26,20 @@ const checkTurn = (starNumber) => {
 /**
  * Load Turn and append to req.
  */
-function load(req, res, next, walletID, playerID) {
-  return Turn.getBywalletID(walletID, playerID)
+function load(req, res, next, walletID, playerID, playType) {
+  return Turn.getBywalletID(walletID, playerID, playType)
     .then(async (model) => {
       if (isEmpty(model)) {
         const player = await Player.getById(playerID);
         const obj = new Turn();
         obj.walletID = walletID;
         obj.turnNumber = 0;
-        obj.turnLimit = checkTurn(player.starNumber);
-
+        if(playType === "PVP"){
+          obj.turnLimit = 5;
+        }else{
+          obj.turnLimit = checkTurn(player.starNumber);
+      
+        }
         obj.save();
         req.model = obj;
       } else {
@@ -52,8 +56,8 @@ function load(req, res, next, walletID, playerID) {
  */
 function get(req, res, next) {
   const wallet = req.params.walletID;
-  const { playerID } = req.params;
-  return Turn.getBywalletID(wallet, playerID)
+  const { playerID, playType } = req.params;
+  return Turn.getBywalletID(wallet, playerID, playType)
     .then(async (model) => {
       if (isEmpty(model)) {
         const player = await Player.getById(playerID);
@@ -61,7 +65,12 @@ function get(req, res, next) {
         obj.walletID = wallet;
         obj.turnNumber = 0;
         obj.playerID = playerID;
-        obj.turnLimit = checkTurn(player.starNumber);
+        if(playType === "PVP"){
+          obj.turnLimit = 5;
+        }else{
+          obj.turnLimit = checkTurn(player.starNumber);
+      
+        }
         obj.save();
         res.json(obj);
       }
@@ -79,6 +88,7 @@ function getObject(req, res, next) {
     .then((model) => res.json(model.safeModel()))
     .catch((e) => next(e));
 }
+
 /**
  * Create Turn
  * @param {*} req
@@ -87,12 +97,15 @@ function getObject(req, res, next) {
  */
 async function create(req, res, next) {
   const model = new Turn(req.body);
-  const { 
-    playerID
-  } = req.body;
+  const { playerID, playType } = req.body;
 
   const player = await Player.getById(playerID);
-  model.turnLimit = checkTurn(player.starNumber);
+  if(playType === "PVP"){
+    model.turnLimit = 5;
+  }else{
+    model.turnLimit = checkTurn(player.starNumber);
+
+  }
   model.turnNumber = 0;
   return model
     .save()
@@ -109,7 +122,7 @@ async function create(req, res, next) {
  */
 function update(req, res, next) {
   const wallet = req.params.walletID;
-  const { playerID } = req.body;
+  const { playerID, playType } = req.body;
   Turn.findOne({
     where: {
       createdAt: {
@@ -118,6 +131,7 @@ function update(req, res, next) {
       },
       walletID: wallet,
       playerID,
+      playType,
     },
   })
     .then((turn) => {

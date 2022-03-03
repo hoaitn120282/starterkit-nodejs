@@ -25,7 +25,7 @@ const paramValidation = {
       rewardNumber: Joi.number(),
       expNumber: Joi.number(),
       rewardType: Joi.string(),
-      activityName: Joi.string(),
+      activityName: Joi.string().required(),
     }),
   },
 };
@@ -78,7 +78,7 @@ router.route("/").get(modelCtrl.list);
  * @apiParam {Integer} rewardNumber Mandatory Reward number in play session.
  * @apiParam {Integer} expNumber Mandatory Experience number in play session.
  * @apiParam {String} rewardType Mandatory The of token reward won in game.
- * @apiParam {activityName} Mandatory Activity name of play session: pvp or pve.
+ * @apiParam {activityName} Mandatory Activity name of play: PVP or PVE.
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *

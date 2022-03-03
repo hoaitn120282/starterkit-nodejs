@@ -18,7 +18,7 @@ const TurnsSchema = {
     type: Sequelize.BIGINT,
     allowNull: false,
   },
-  playeType: {
+  playType: {
     type: Sequelize.STRING,
     allowNull: true,
   },
@@ -77,11 +77,12 @@ Turns.list = function list({ skip = 0, limit = 50 } = {}) {
   });
 };
 
-Turns.getBywalletID = function getBywalletID(wallet, playerID) {
+Turns.getBywalletID = function getBywalletID(wallet, playerID, playType) {
   return this.findOne({
     where: {
       walletID: wallet,
       playerID,
+      playType,
       createdAt: {
         $gte: new Date(new Date() - 24 * 60 * 60 * 1000),
         $lte: new Date(),

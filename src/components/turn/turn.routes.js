@@ -8,9 +8,9 @@ const router = express.Router();
 const paramValidation = {
   updateModel: {
     body: Joi.object({
-      // walletID: Joi.string().required(),
       playerID: Joi.number().required(),
       turnNumber: Joi.number(),
+      playType: Joi.string().required(),
     }),
     params: Joi.object({
       walletID: Joi.string().required(),
@@ -20,7 +20,7 @@ const paramValidation = {
     body: Joi.object({
       walletID: Joi.string().required(),
       playerID: Joi.number().required(),
-      playeType: Joi.string(),
+      playType: Joi.string().required(),
     }),
   },
 };
@@ -31,17 +31,22 @@ const paramValidation = {
  * @apiName Get the list of Turns
  * @apiGroup Turns
  *
- * * @apiSuccess {Object} Model[{}] List items of the History.
+ * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     [
  *      {
  *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "turnNumber": 2,
+ *       "turnLimit": 14,
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
  *       }
  *     ]
  *
- * @apiError HistoryNotFound Data is not exist.
+ * @apiError Turns Data is not exist.
  *
  * @apiErrorExample Error-Response:
  *     HTTP/1.1 404 Not Found
@@ -58,15 +63,20 @@ const paramValidation = {
  *
  * @apiParam {String} walletID Mandatory unique Param.
  * @apiParam {Integer} playerID Mandatory unique Param.
- * @apiParam {String} playeType pvp or pve
+ * @apiParam {String} playType PVP or PVE
  *
- * @apiSuccess {Object} Model[{}] Item of the claim created.
+ * @apiSuccess {Object} Model[{}] Item of the turn created.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     [
  *      {
  *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "turnNumber": 2,
+ *       "turnLimit": 14,
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
  *       }
  *     ]
  *
@@ -85,23 +95,27 @@ router
   .post(validate(paramValidation.createModel), modelCtrl.create);
 
 /**
- * @api {get} /turns/:walletID/:playerID/ Get detail turn
+ * @api {get} /turns/:walletID/:playerID/:playType Get detail turn
  * @apiVersion 1.0.0
  * @apiName Create turn by wallteId and playerId
  * @apiGroup Turns
  *
  * @apiParam {String} walletID Mandatory unique Param.
  * @apiParam {Integer} playerID Mandatory unique Param.
+ * @apiParam {String} playType PVP or PVE
  *
- * @apiSuccess {Object} Model[{}] Item of the claim created.
+ * @apiSuccess {Object} Model[{}] Item of the turn created.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     [
  *      {
  *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "turnNumber": 2,
+ *       "turnLimit": 14,
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
  *       }
- *     ]
  *
  *
  * @apiErrorExample Error-Response:
@@ -112,7 +126,7 @@ router
  */
 
 router
-  .route("/:walletID/:playerID")
+  .route("/:walletID/:playerID/:playType")
   .get(modelCtrl.get)
 
   .delete(modelCtrl.destroy);
@@ -125,16 +139,20 @@ router
  *
  * @apiParam {Integer} playerID Mandatory unique Param.
  * @apiParam {String} turnNumber Turn number.
- *
- * @apiSuccess {Object} Model[{}] Item of the claim created.
+ * @apiParam {String} playType PVP or PVE.
+ * 
+ * @apiSuccess {Object} Model[{}] Item of the turn created.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
- *     [
  *      {
  *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "turnNumber": 2,
+ *       "turnLimit": 14,
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
  *       }
- *     ]
  *
  *
  * @apiErrorExample Error-Response:
