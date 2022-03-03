@@ -20,6 +20,7 @@ const paramValidation = {
     body: Joi.object({
       walletID: Joi.string().required(),
       playerID: Joi.number().required(),
+      playeType: Joi.string(),
     }),
   },
 };
@@ -57,6 +58,7 @@ const paramValidation = {
  *
  * @apiParam {String} walletID Mandatory unique Param.
  * @apiParam {Integer} playerID Mandatory unique Param.
+ * @apiParam {String} playeType pvp or pve
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *

@@ -18,6 +18,10 @@ const TurnsSchema = {
     type: Sequelize.BIGINT,
     allowNull: false,
   },
+  playeType: {
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   walletID: {
     type: Sequelize.STRING,
   },
