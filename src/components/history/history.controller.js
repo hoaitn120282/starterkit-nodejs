@@ -7,13 +7,14 @@ const Models = require("../models");
 /**
  * Load History and append to req.
  */
-function load(req, res, next, walletID) {
-  const { limit = 50, skip = 0 } = req.query;
-  return History.getBywalletID(walletID, { limit, skip })
-    .then((model) => {
-      req.model = model;
-      return res.json(req.model);
-    })
+function load(req, res, next) {
+  const { id } = req.params;
+  return History.findOne({
+    where: {
+      id,
+    },
+  })
+    .then((player) => res.json(player))
     .catch((e) => next(e));
 }
 
@@ -22,7 +23,29 @@ function load(req, res, next, walletID) {
  * @returns {History}
  */
 function get(req, res) {
-  return res.json(req.model.safeModel());
+  const { id } = req.params;
+  return History.findOne({
+    where: {
+      id,
+    },
+  })
+    .then((player) => res.json(player))
+    .catch((e) => next(e));
+}
+
+/**
+ * Get detail History by Id
+ * @returns {History}
+ */
+function getDetail(req, res) {
+  const { id } = req.params;
+  return History.findOne({
+    where: {
+      id,
+    },
+  })
+    .then((player) => res.json(player))
+    .catch((e) => next(e));
 }
 
 /**
@@ -129,4 +152,5 @@ module.exports = {
   destroy,
   create,
   listTopReward,
+  getDetail,
 };

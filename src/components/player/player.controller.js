@@ -159,8 +159,8 @@ const checkToc = (starNumber, manaAdd) => {
  */
 async function bootMana(req, res, next) {
   const { playerId } = req.params;
-  const { walletID } = req.body;
-  const player = await Player.findOne({ where: { id: playerId, walletID } });
+  // const { walletID } = req.body;
+  const player = await Player.findOne({ where: { id: playerId } });
 
   if (!player) {
     return res.json({
@@ -183,12 +183,6 @@ async function bootMana(req, res, next) {
   }
   reward.rewardAmount -= newToc;
   player.mana = newMana;
-
-  // reward.save();
-  // return player
-  //   .save()
-  //   .then((savedPlayer) => res.json(savedPlayer.safeModel()))
-  //   .catch((e) => next(e));
 
   const transaction = await sequelize.transaction();
   try {

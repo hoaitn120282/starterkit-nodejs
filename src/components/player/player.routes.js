@@ -171,12 +171,12 @@ router.route("/top-exp").get(playerCtrl.listTopExp);
 router.route("/detailPlayer/:playerId").get(playerCtrl.getDetailPlayer);
 
 /**
- * @api {post} /players/:playerId/bootMana Boot Mana
+ * @api {post} /players/bootMana/:playerId Boot Mana
  * @apiVersion 1.0.0
  * @apiName Boot mana with playerId
  * @apiGroup Players
  *
- * @apiParam {String} walletId Mandatory unique Param.
+ * @apiParam {String} playerId Mandatory unique Param.
  *
  * @apiSuccess {Object} Model[{}] Item of the player created.
  *
@@ -202,7 +202,7 @@ router.route("/detailPlayer/:playerId").get(playerCtrl.getDetailPlayer);
  *     }
  */
 router
-  .route("/:playerId/bootMana")
+  .route("/bootMana/:playerId")
   .post(validate(paramValidation.bootMana), playerCtrl.bootMana);
 
 /**
