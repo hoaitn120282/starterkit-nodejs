@@ -234,6 +234,23 @@ async function getDetailPlayer(req, res, next) {
 }
 
 /**
+ * Get detail player by TokenId.
+ * @returns {Player}
+ */
+async function getPlayerByTokenID(req, res, next) {
+  const { tokenID, walletID } = req.params;
+
+  return Player.findOne({
+    where: {
+      tokenID,
+      walletID,
+    },
+  })
+    .then((player) => res.json(player))
+    .catch((e) => next(e));
+}
+
+/**
  * List Top player exp
  * @returns {Player}
  */
@@ -265,4 +282,5 @@ module.exports = {
   bootHp,
   getDetailPlayer,
   listTopExp,
+  getPlayerByTokenID
 };

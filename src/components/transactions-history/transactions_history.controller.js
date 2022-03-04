@@ -1,5 +1,5 @@
 // const { isEmpty } = require("lodash");
-const Deposit = require('../deposit/deposit.model');
+// const Deposit = require('../deposit/deposit.model');
 const Withdraw = require('../withdraw/withdraw.model');
 
 // const config = require("../../config");
@@ -13,18 +13,18 @@ const Withdraw = require('../withdraw/withdraw.model');
 async function list(req, res) {
   const { walletID } = req.body;
   const { limit = 50, skip = 0 } = req.query;
-  const deposits = await Deposit.getBywalletID(walletID, {
-    limit: Math.floor(limit / 2),
-    skip,
-  });
+  // const deposits = await Deposit.getBywalletID(walletID, {
+  //   limit: Math.floor(limit / 2),
+  //   skip,
+  // });
   const withdraws = await Withdraw.getBywalletID(walletID, {
-    limit: Math.floor(limit / 2),
+    limit: limit,
     skip,
   });
 
-  const transaction = deposits.concat(withdraws);
+  // const transaction = deposits.concat(withdraws);
 
-  return res.json(transaction);
+  return res.json(withdraws);
 }
 
 module.exports = {
