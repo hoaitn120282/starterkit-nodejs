@@ -40,7 +40,7 @@ router.route('/')
  *
  * @apiParam {String} walletID Mandatory unique Param.
  * @apiParam {Integer} claimRewardAmount Mandatory The amount in claim request.
- * @apiParam {String} claimRewardType Mandatory The type of token in request.
+ * @apiParam {String} claimRewardType Mandatory The type of token: PVP or PVE.
  * @apiParam {String} claimStatus Status of request, It should be "Confirmed".
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
@@ -68,6 +68,7 @@ router.route('/')
  */
 router.route('/')
   .post(validate(paramValidation.createModel), modelCtrl.create);
+
 /**
  * @api {get} /claims/:walletID Claims List
  * @apiVersion 1.0.0
