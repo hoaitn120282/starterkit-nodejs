@@ -1,7 +1,7 @@
-const express = require('express');
-const { Joi } = require('express-validation');
-const modelCtrl = require('./withdraw.controller');
-const { validate } = require('../../helpers');
+const express = require("express");
+const { Joi } = require("express-validation");
+const modelCtrl = require("./withdraw.controller");
+const { validate } = require("../../helpers");
 
 const router = express.Router();
 
@@ -15,8 +15,7 @@ const paramValidation = {
   },
 };
 
-router.route('/')
-  .get(modelCtrl.list);
+router.route("/").get(modelCtrl.list);
 
 /**
  * @api {post} /withdraw Withdraw Creation
@@ -51,8 +50,7 @@ router.route('/')
  *       "message": Your amount have not enough to withdraw!
  *     }
  */
-router.route('/')
-  .post(validate(paramValidation.createModel), modelCtrl.create);
+router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
 /**
  * @api {get} /withdraw/:walletID Withdraw List
  * @apiVersion 1.0.0
@@ -60,6 +58,9 @@ router.route('/')
  * @apiGroup Withdraw
  *
  *
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
  * @apiSuccess {Object} Model[{}] List items of the Withdraw.
  *
  * @apiSuccessExample {json} Success-Response:
@@ -102,11 +103,12 @@ router.route('/')
  *       "error": "Data is not exist"
  *     }
  */
-router.route('/:walletID')
+router
+  .route("/:walletID")
   .get(modelCtrl.get)
 
   .delete(modelCtrl.destroy);
 
-router.param('walletID', modelCtrl.load);
+router.param("walletID", modelCtrl.load);
 
 module.exports = router;
