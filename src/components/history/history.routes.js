@@ -135,12 +135,12 @@ router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
 router.route("/top-reward-toc").get(modelCtrl.listTopReward);
 
 /**
- * @api {get} /play-history/:id History detail
+ * @api {get} /play-history/:walletID History listing by walletID
  * @apiVersion 1.0.0
- * @apiName Get the list of histories by id
+ * @apiName Get the list of histories by walletID
  * @apiGroup Play History
  *
- * @apiParam {Integer} id Mandatory unique Param.
+ * @apiParam {String} walletID Mandatory unique Param.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
@@ -168,8 +168,8 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  *     }
  */
 router
-  .route("/:id")
-  .get(modelCtrl.getDetail)
+  .route("/:walletID")
+  .get(modelCtrl.getbyWalltediD)
 
   .delete(modelCtrl.destroy);
 

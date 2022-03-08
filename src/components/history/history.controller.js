@@ -4,6 +4,9 @@ const History = require("./history.model");
 const Player = require("../player/player.model");
 const Models = require("../models");
 
+const dayjs = require("dayjs");
+const _ = require("lodash");
+
 /**
  * Load History and append to req.
  */
@@ -70,6 +73,7 @@ function create(req, res, next) {
           res.json({ message: "Player does not exsit!" });
         }
       });
+
       // Models.Reward.findOne({
       //   where: {
       //     walletID: savedmodel.walletID,
@@ -97,9 +101,61 @@ function create(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  return History.list({ limit, skip })
+  return History.list({
+    limit,
+    skip,
+  })
     .then((models) => res.json(models))
     .catch((e) => next(e));
+}
+
+/**
+ * Get Histories list.
+ * @property {number} req.query.skip
+ * @property {number} req.query.limit
+ * @returns {Promise<History[]>}
+ */
+async function getbyWalltediD(req, res, next) {
+  const { startDate } = req.query;
+  const { walletID } = req.params;
+  const endDate = dayjs(startDate).add(2, "day").toISOString();
+
+  const ListHistory = await History.getBywalletID({
+    where: {
+      walletID,
+      createdAt: {
+        $between: [dayjs(startDate).toISOString(), endDate],
+      },
+    },
+  });
+
+  ListHistory.map((e, index) => {
+    const newDate = dayjs(e.createdAt).format("YYYY-MM-DD");
+    // console.log(e);
+    e.createdAt = newDate;
+    console.log('eee',e.dataValues);
+
+    return e;
+  });
+
+  console.log(ListHistory);
+
+  let grouped = _.mapValues(_.groupBy(ListHistory, "createdAt"), (clist) =>
+    clist.map((listDay) => _.omit(listDay, "createdAt"))
+  );
+
+  // console.log("grouped", grouped);
+
+  return res.json({
+    ListHistory,
+  });
+  // return History.list({
+  //   limit,
+  //   skip,
+  //   group: [sequelize.fn("date_trunc", "day", sequelize.col("createdAt"))],
+  // })
+  //   .then((models) => res.json(models))
+  //   .catch((e) => next(e));
 }
 
 /**
@@ -153,4 +209,5 @@ module.exports = {
   create,
   listTopReward,
   getDetail,
+  getbyWalltediD,
 };
