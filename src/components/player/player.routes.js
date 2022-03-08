@@ -206,10 +206,10 @@ router
   .post(validate(paramValidation.bootMana), playerCtrl.bootMana);
 
 /**
- * @api {post} /players/bootHp Boot Hp
- * @apiVersion 1.0.0
- * @apiName Boot Hp with playerId
- * @apiGroup Players
+ *  {post} /players/bootHp Boot Hp
+ *  1.0.0
+ *  Boot Hp with playerId
+ *  Players
  *
  * @apiParam {String} walletId Mandatory unique Param.
  *
