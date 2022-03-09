@@ -48,7 +48,7 @@ const HistoriesSchema = {
 const History = db.sequelize.define("reward-histories", HistoriesSchema);
 
 History.belongsTo(Player, {
-  foreignKey: 'playerID'
+  foreignKey: "playerID",
 });
 
 /**
@@ -74,10 +74,12 @@ History.get = function get(id) {
  * @param {number} limit - Limit number of Histories to be returned.
  * @returns {Promise<History[]>}
  */
-History.list = function list({ skip = 0, limit = 50 } = {}) {
+History.list = function list({ skip = 0, limit = 50, group = [] } = {}) {
   return this.findAll({
     limit,
     offset: skip,
+    group,
+    // group: [sequelize.fn('date_trunc', 'day', sequelize.col('createdAt'))]
   });
 };
 
@@ -95,7 +97,7 @@ History.listHistoryTop = function listHistoryTop({
   where,
   group,
   attributes,
-  include
+  include,
 } = {}) {
   return this.findAll({
     limit,
@@ -103,22 +105,12 @@ History.listHistoryTop = function listHistoryTop({
     where,
     attributes,
     group,
-    include
+    include,
   });
 };
 
-History.getBywalletID = function getBywalletID(
-  wallet,
-  { skip = 0, limit = 50 } = {}
-) {
-  return this.findAll({
-    where: {
-      walletID: wallet,
-    },
-    limit,
-    offset: skip,
-    order: [["createdAt", "DESC"]],
-  });
+History.getBywalletID = function getBywalletID(options) {
+  return this.findAll(options);
 };
 
 /**

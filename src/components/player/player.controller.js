@@ -175,9 +175,16 @@ async function bootMana(req, res, next) {
   });
 
   const newToc = checkToc(player.starNumber, manaAdd);
+  // if(!reward){
+  //   return res.json({
+  //     TOC: newToc,
+  //     message: "Your amount not enough to use! please deposit more.",
+  //   });
+  // }
 
-  if (newToc > reward.rewardAmount) {
+  if (!reward || newToc > reward.rewardAmount) {
     return res.json({
+      TOC: newToc,
       message: "Your amount not enough to use! please deposit more.",
     });
   }
@@ -276,5 +283,5 @@ module.exports = {
   bootHp,
   getDetailPlayer,
   listTopExp,
-  getPlayerByTokenID
+  getPlayerByTokenID,
 };

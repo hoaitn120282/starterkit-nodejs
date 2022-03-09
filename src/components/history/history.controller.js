@@ -4,6 +4,9 @@ const History = require("./history.model");
 const Player = require("../player/player.model");
 const Models = require("../models");
 
+const dayjs = require("dayjs");
+const _ = require("lodash");
+
 /**
  * Load History and append to req.
  */
@@ -70,6 +73,7 @@ function create(req, res, next) {
           res.json({ message: "Player does not exsit!" });
         }
       });
+
       // Models.Reward.findOne({
       //   where: {
       //     walletID: savedmodel.walletID,
@@ -97,9 +101,57 @@ function create(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  return History.list({ limit, skip })
+  return History.list({
+    limit,
+    skip,
+  })
     .then((models) => res.json(models))
     .catch((e) => next(e));
+}
+
+/**
+ * Get Histories list.
+ * @property {number} req.query.skip
+ * @property {number} req.query.limit
+ * @returns {Promise<History[]>}
+ */
+async function getbyWalltediD(req, res, next) {
+  const { startDate } = req.query;
+  const { walletID } = req.params;
+  const endDate = dayjs(startDate).subtract(1, "day").toDate();
+
+  const HistoryArr = await History.getBywalletID({
+    where: {
+      walletID,
+      createdAt: {
+        $between: [endDate, dayjs(startDate).add(1, "day").toDate()],
+      },
+    },
+    order: [["createdAt", "DESC"]],
+    raw: true,
+  });
+
+  HistoryArr.map((e) => {
+    const newDate = dayjs(e.createdAt).format("YYYY-MM-DD");
+    e.createDate = newDate;
+    return e;
+  });
+
+  const grouped = _.mapValues(_.groupBy(HistoryArr, "createDate"), (clist) =>
+    clist.map((listDay) => listDay)
+  );
+
+  const ListHistory = _.values(grouped);
+
+  return res.json({ ListHistory });
+
+  // return History.list({
+  //   limit,
+  //   skip,
+  //   group: [sequelize.fn("date_trunc", "day", sequelize.col("createdAt"))],
+  // })
+  //   .then((models) => res.json(models))
+  //   .catch((e) => next(e));
 }
 
 /**
@@ -153,4 +205,5 @@ module.exports = {
   create,
   listTopReward,
   getDetail,
+  getbyWalltediD,
 };
