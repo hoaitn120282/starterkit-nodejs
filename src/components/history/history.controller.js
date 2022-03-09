@@ -118,13 +118,29 @@ function list(req, res, next) {
 async function getbyWalltediD(req, res, next) {
   const { startDate } = req.query;
   const { walletID } = req.params;
-  const endDate = dayjs(startDate).subtract(1, "day").toDate();
+  let startDay = dayjs(startDate).subtract(1, "day").toDate();
+  let endDay = dayjs(startDate).add(1, "day").toDate();
 
+  // Check the last day user has data
+  if (!startDate) {
+    const lastData = await History.findOne({
+      where: {
+        walletID,
+      },
+      order: [["createdAt", "DESC"]],
+      raw: true,
+    });
+
+    startDay = dayjs(lastData.createdAt).subtract(1, "day").toDate();
+    endDay = lastData.createdAt;
+  }
+
+  // Get list history 
   const HistoryArr = await History.getBywalletID({
     where: {
       walletID,
       createdAt: {
-        $between: [endDate, dayjs(startDate).add(1, "day").toDate()],
+        $between: [startDay, endDay],
       },
     },
     order: [["createdAt", "DESC"]],
@@ -141,17 +157,20 @@ async function getbyWalltediD(req, res, next) {
     clist.map((listDay) => listDay)
   );
 
-  const ListHistory = _.values(grouped);
+  // Make beautiful Data
+  const MakeData = _.values(grouped);
+  const ListHistory = MakeData.map((ele) => {
+    let lastTime = "";
+    if (ele.length > 0) {
+      lastTime = ele[0].createDate;
+    }
+    return {
+      date: lastTime,
+      data: ele,
+    };
+  });
 
-  return res.json({ ListHistory });
-
-  // return History.list({
-  //   limit,
-  //   skip,
-  //   group: [sequelize.fn("date_trunc", "day", sequelize.col("createdAt"))],
-  // })
-  //   .then((models) => res.json(models))
-  //   .catch((e) => next(e));
+  return res.json(ListHistory);
 }
 
 /**

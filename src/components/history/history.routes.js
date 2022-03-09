@@ -2,6 +2,7 @@ const express = require("express");
 const { Joi } = require("express-validation");
 const modelCtrl = require("./history.controller");
 const { validate } = require("../../helpers");
+const dayjs = require("dayjs");
 
 const router = express.Router();
 
@@ -26,6 +27,20 @@ const paramValidation = {
       expNumber: Joi.number(),
       rewardType: Joi.string(),
       activityName: Joi.string().required(),
+    }),
+  },
+  getList: {
+    query: Joi.object({
+      startDate: Joi.string().custom((value, helper) => {
+        if (dayjs(value, "YYYY-MM-DD").isValid()) {
+          return true;
+        } else {
+          return helper.message("StartDate is not correct format");
+        }
+      }),
+    }),
+    params: Joi.object({
+      walletID: Joi.string().required(),
     }),
   },
 };
@@ -141,40 +156,34 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {String} startDate Day state: 20222-03-04.
+ * @apiParam {String} startDate startDate: YYYY-MM-DD.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
  *  HTTP/1.1 200 OK
- *  {
- *  "ListHistory": [
  *     [
- *      {
- *       "id": "2",
- *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
- *       "rewardNumber": 190,
- *       "expNumber": 3,
- *       "rewardType": "TOC",
- *       "activityName": "Training",
- *       "createdAt": "2022-01-04T19:17:17.089Z",
- *       "updatedAt": "2022-01-04T19:17:17.089Z"
- *       }
- *    ],
- *    [
- *      {
- *       "id": "2",
- *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
- *       "rewardNumber": 190,
- *       "expNumber": 3,
- *       "rewardType": "TOC",
- *       "activityName": "Training",
- *       "createdAt": "2022-01-04T19:17:17.089Z",
- *       "updatedAt": "2022-01-04T19:17:17.089Z"
- *       }
+ *         {
+ *           "date": "2022-03-06",
+ *           "data": [
+ *               {
+ *                   "id": "4",
+ *                   "playerID": "1",
+ *                   "walletID": "222",
+ *                   "rewardNumber": 44,
+ *                   "expNumber": 4,
+ *                   "rewardType": "TOC",
+ *                   "activityName": "PVP",
+ *                   "createdAt": "2022-03-06T03:24:38.000Z",
+ *                   "updatedAt": "2022-03-06T03:24:46.000Z",
+ *                   "createDate": "2022-03-06"
+ *               },
+ *               ...
+ *             ]
+ *          },
+ *        ...
  *     ]
- * ]
- * }
+ *
  *
  * @apiError HistoryNotFound Data is not exist.
  *
@@ -186,7 +195,7 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  */
 router
   .route("/:walletID")
-  .get(modelCtrl.getbyWalltediD)
+  .get(validate(paramValidation.getList), modelCtrl.getbyWalltediD)
 
   .delete(modelCtrl.destroy);
 
