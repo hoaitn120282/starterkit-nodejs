@@ -141,11 +141,14 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
+ * @apiParam {String} startDate Day state: 20222-03-04.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
+ *  HTTP/1.1 200 OK
+ *  {
+ *  "ListHistory": [
  *     [
  *      {
  *       "id": "2",
@@ -157,7 +160,21 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  *       "createdAt": "2022-01-04T19:17:17.089Z",
  *       "updatedAt": "2022-01-04T19:17:17.089Z"
  *       }
+ *    ],
+ *    [
+ *      {
+ *       "id": "2",
+ *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
+ *       "rewardNumber": 190,
+ *       "expNumber": 3,
+ *       "rewardType": "TOC",
+ *       "activityName": "Training",
+ *       "createdAt": "2022-01-04T19:17:17.089Z",
+ *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *       }
  *     ]
+ * ]
+ * }
  *
  * @apiError HistoryNotFound Data is not exist.
  *

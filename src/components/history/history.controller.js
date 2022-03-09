@@ -118,37 +118,33 @@ function list(req, res, next) {
 async function getbyWalltediD(req, res, next) {
   const { startDate } = req.query;
   const { walletID } = req.params;
-  const endDate = dayjs(startDate).add(2, "day").toISOString();
+  const endDate = dayjs(startDate).subtract(1, "day").toDate();
 
-  const ListHistory = await History.getBywalletID({
+  const HistoryArr = await History.getBywalletID({
     where: {
       walletID,
       createdAt: {
-        $between: [dayjs(startDate).toISOString(), endDate],
+        $between: [endDate, dayjs(startDate).add(1, "day").toDate()],
       },
     },
+    order: [["createdAt", "DESC"]],
+    raw: true,
   });
 
-  ListHistory.map((e, index) => {
+  HistoryArr.map((e) => {
     const newDate = dayjs(e.createdAt).format("YYYY-MM-DD");
-    // console.log(e);
-    e.createdAt = newDate;
-    console.log('eee',e.dataValues);
-
+    e.createDate = newDate;
     return e;
   });
 
-  console.log(ListHistory);
-
-  let grouped = _.mapValues(_.groupBy(ListHistory, "createdAt"), (clist) =>
-    clist.map((listDay) => _.omit(listDay, "createdAt"))
+  const grouped = _.mapValues(_.groupBy(HistoryArr, "createDate"), (clist) =>
+    clist.map((listDay) => listDay)
   );
 
-  // console.log("grouped", grouped);
+  const ListHistory = _.values(grouped);
 
-  return res.json({
-    ListHistory,
-  });
+  return res.json({ ListHistory });
+
   // return History.list({
   //   limit,
   //   skip,

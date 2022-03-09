@@ -109,13 +109,8 @@ History.listHistoryTop = function listHistoryTop({
   });
 };
 
-History.getBywalletID = function getBywalletID({where}) {
-  return this.findAll({
-    where
-    // limit,
-    // offset: skip,
-    // order: [["createdAt", "DESC"]],
-  });
+History.getBywalletID = function getBywalletID(options) {
+  return this.findAll(options);
 };
 
 /**
