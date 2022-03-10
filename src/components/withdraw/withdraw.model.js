@@ -78,7 +78,7 @@ Withdraw.list = function list({ skip = 0, limit = 50 } = {}) {
 };
 
 Withdraw.getBywalletID = function getBywalletID(wallet, { skip = 0, limit = 50 } = {}) {
-  return this.findAll({
+  return this.findAndCountAll({
     where: {
       walletID: wallet,
     },

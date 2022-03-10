@@ -20,23 +20,28 @@ const paramValidation = {
  * @apiGroup Transactions History
  *
  *
- * @apiParam {String} walletID Mandatory unique Param.
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
+ * 
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
+ *  HTTP/1.1 200 OK
+ *   {
+ *     "count": 10,
+ *     "rows":[
  *      {
- *       "id": "2",
- *       "walletID": "JY58ZjzBWh9785349Yo54FP789453697852147",
- *       "rewardNumber": 190,
- *       "expNumber": 3,
- *       "rewardType": "TOC",
- *       "activityName": "Training",
- *       "createdAt": "2022-01-04T19:17:17.089Z",
- *       "updatedAt": "2022-01-04T19:17:17.089Z"
+ *          "id": "1",
+ *           "walletID": "222",
+ *           "tokenBalance": 100,
+ *           "tokenType": "TOC",
+ *           "status": "success",
+ *           "createdAt": "2022-03-10T10:08:27.000Z",
+ *           "updatedAt": "2022-03-10T10:08:30.000Z"
  *       }
  *     ]
+ *   }
  *
  * @apiError HistoryNotFound Data is not exist.
  *
