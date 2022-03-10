@@ -1,5 +1,5 @@
 const { sequelize } = require("../../config/db");
-const { isEmpty } = require("lodash");
+const { isEmpty, parseInt } = require("lodash");
 const History = require("./history.model");
 const Player = require("../player/player.model");
 const Models = require("../models");
@@ -116,61 +116,76 @@ function list(req, res, next) {
  * @returns {Promise<History[]>}
  */
 async function getbyWalltediD(req, res, next) {
-  const { startDate } = req.query;
+  const { limit = 2, skip = 0 } = req.query;
   const { walletID } = req.params;
-  let startDay = dayjs(startDate).subtract(1, "day").toDate();
-  let endDay = dayjs(startDate).add(1, "day").toDate();
 
-  // Check the last day user has data
-  if (!startDate) {
-    const lastData = await History.findOne({
-      where: {
-        walletID,
-      },
-      order: [["createdAt", "DESC"]],
-      raw: true,
-    });
-
-    startDay = dayjs(lastData.createdAt).subtract(1, "day").toDate();
-    endDay = lastData.createdAt;
-  }
-
-  // Get list history 
-  const HistoryArr = await History.getBywalletID({
+  const count = await History.count({
     where: {
       walletID,
-      createdAt: {
-        $between: [startDay, endDay],
-      },
     },
-    order: [["createdAt", "DESC"]],
+    attributes: [
+      [sequelize.fn("DATE", sequelize.col("createdAt")), "Date"],
+      [sequelize.fn("count", "*"), "count"],
+    ],
+    group: [sequelize.fn("DATE", sequelize.col("createdAt")), "Date"],
     raw: true,
   });
 
-  HistoryArr.map((e) => {
-    const newDate = dayjs(e.createdAt).format("YYYY-MM-DD");
-    e.createDate = newDate;
-    return e;
+  const DaysArr = await History.findAll({
+    where: {
+      walletID,
+    },
+    attributes: [
+      [sequelize.fn("DATE", sequelize.col("createdAt")), "Date"],
+      [sequelize.fn("count", "*"), "count"],
+    ],
+    group: [sequelize.fn("DATE", sequelize.col("createdAt")), "Date"],
+    order: [[sequelize.col("Date"), "DESC"]],
+    limit,
+    offset: skip,
+    raw: true,
   });
 
-  const grouped = _.mapValues(_.groupBy(HistoryArr, "createDate"), (clist) =>
-    clist.map((listDay) => listDay)
+  // console.log();
+
+  const dataDays = await Promise.all(
+    DaysArr.map(async (d) => {
+      const listByDay = await History.getBywalletID({
+        where: {
+          walletID,
+        },
+        where: sequelize.where(
+          sequelize.fn("date", sequelize.col("createdAt")),
+          "=",
+          d.Date
+        ),
+        raw: true,
+      });
+      return listByDay;
+    })
   );
 
-  // Make beautiful Data
-  const MakeData = _.values(grouped);
-  const ListHistory = MakeData.map((ele) => {
+  const ListHistory = dataDays.map((ele) => {
     let lastTime = "";
+    let totalExp = 0;
+    let totalReward = 0;
     if (ele.length > 0) {
-      lastTime = ele[0].createDate;
+      lastTime = dayjs(ele[0].createdAt).format("YYYY-MM-DD");
+      totalExp = ele.reduce((a, b) => a + b.expNumber, 0);
+      totalReward = ele.reduce((a, b) => a + b.rewardNumber, 0);
     }
     return {
       date: lastTime,
+      totalExp,
+      totalReward,
       data: ele,
     };
   });
 
-  return res.json(ListHistory);
+  return res.json({
+    total: count.length,
+    data: ListHistory,
+  });
 }
 
 /**

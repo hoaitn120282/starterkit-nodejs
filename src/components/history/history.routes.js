@@ -30,15 +30,15 @@ const paramValidation = {
     }),
   },
   getList: {
-    query: Joi.object({
-      startDate: Joi.string().custom((value, helper) => {
-        if (dayjs(value, "YYYY-MM-DD").isValid()) {
-          return true;
-        } else {
-          return helper.message("StartDate is not correct format");
-        }
-      }),
-    }),
+    // query: Joi.object({
+    //   startDate: Joi.string().custom((value, helper) => {
+    //     if (dayjs(value, "YYYY-MM-DD").isValid()) {
+    //       return true;
+    //     } else {
+    //       return helper.message("StartDate is not correct format");
+    //     }
+    //   }),
+    // }),
     params: Joi.object({
       walletID: Joi.string().required(),
     }),
@@ -156,15 +156,20 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {String} startDate startDate: YYYY-MM-DD.
+ * @apiParam {Integer} litmit Items in a page.
+ * @apiParam {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
  *  HTTP/1.1 200 OK
- *     [
+ *  {
+ *    "total": 4,
+ *    "data":[
  *         {
  *           "date": "2022-03-06",
+ *           "totalExp": 4,
+ *           "totalReward": 44,
  *           "data": [
  *               {
  *                   "id": "4",
@@ -183,7 +188,7 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  *          },
  *        ...
  *     ]
- *
+ * }
  *
  * @apiError HistoryNotFound Data is not exist.
  *
