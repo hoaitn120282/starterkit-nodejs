@@ -37,7 +37,7 @@ const router = express.Router();
  * @apiName Create random player
  * @apiGroup Players
  *
- * @apiParam {String} walletID Mandatory unique Param in body.
+ * @apiBody {String} walletID Mandatory unique Param in body.
  *
  * @apiSuccess {Object} Player[{}] Players item.
  *
@@ -68,10 +68,10 @@ router
  * @apiName Create player item with wallet ID
  * @apiGroup Players
  *
- * @apiParam {String} walletId Mandatory unique Param.
- * @apiParam {Integer} starNumber Mandatory unique Param.
- * @apiParam {String} skinName Mandatory unique Param.
- * @apiParam {String} tokenID Mandatory unique Param.
+ * @apiBody {String} walletId Mandatory unique Param.
+ * @apiBody {Integer} starNumber Mandatory unique Param.
+ * @apiBody {String} skinName Mandatory unique Param.
+ * @apiBody {String} tokenID Mandatory unique Param.
  *
  * @apiSuccess {Object} Model[{}] Item of the player created.
  *
