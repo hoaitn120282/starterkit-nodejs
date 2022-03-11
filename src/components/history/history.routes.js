@@ -52,8 +52,8 @@ const paramValidation = {
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
@@ -88,12 +88,12 @@ router.route("/").get(modelCtrl.list);
  * @apiName Create history item with wallet ID
  * @apiGroup Play History
  *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} playerID Mandatory unique Param.
- * @apiParam {Integer} rewardNumber Mandatory Reward number in play session.
- * @apiParam {Integer} expNumber Mandatory Experience number in play session.
- * @apiParam {String} rewardType Mandatory The of token reward won in game.
- * @apiParam {activityName} Mandatory Activity name of play: PVP or PVE.
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiBody {Integer} playerID Mandatory unique Param.
+ * @apiBody {Integer} rewardNumber Mandatory Reward number in play session.
+ * @apiBody {Integer} expNumber Mandatory Experience number in play session.
+ * @apiBody {String} rewardType Mandatory The of token reward won in game.
+ * @apiBody {String} activityName Mandatory Activity name of play: PVP or PVE.
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *
@@ -127,10 +127,10 @@ router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
  * @apiName List top reward TOC
  * @apiGroup Play History
  *
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
- * @apiParam {Datetime} start Start time.
- * @apiParam {Datetime} end End time.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
+ * @apiQuery {Datetime} start Start time.
+ * @apiQuery {Datetime} end End time.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -156,8 +156,8 @@ router.route("/top-reward-toc").get(modelCtrl.listTopReward);
  * @apiGroup Play History
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the History.
  *

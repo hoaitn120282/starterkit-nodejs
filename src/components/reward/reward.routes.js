@@ -45,10 +45,10 @@ router
  * @apiName List top reward TOC
  * @apiGroup Reward
  *
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
- * @apiParam {Datetime} start Start time
- * @apiParam {Datetime} end End time
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
+ * @apiQuery {Datetime} start Start time
+ * @apiQuery {Datetime} end End time
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

@@ -24,9 +24,9 @@ router.route('/')
  * @apiName Create Deposit item with wallet ID
  * @apiGroup Deposit
  *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Float} tokenBalance Mandatory The amount in Deposit request.
- * @apiParam {String} tokenType Mandatory The type of token in request.
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiBody {Float} tokenBalance Mandatory The amount in Deposit request.
+ * @apiBody {String} tokenType Mandatory The type of token in request.
  *
  * @apiSuccess {Object} Model[{}] Item of the Deposit created.
  *
@@ -58,7 +58,9 @@ router.route('/')
  * @apiVersion 1.0.0
  * @apiName Get the list of Deposit via wallet ID
  * @apiGroup Deposit
- *
+ *  
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the Deposit.
  *
