@@ -31,6 +31,9 @@ const paramValidation = {
  * @apiName Get the list of Turns
  * @apiGroup Turns
  *
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
+ * 
  * @apiSuccess {Object} Model[{}] List items of the History.
  *
  * @apiSuccessExample {json} Success-Response:
@@ -61,9 +64,9 @@ const paramValidation = {
  * @apiName Get turn by wallteId and playerId
  * @apiGroup Turns
  *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} playerID Mandatory unique Param.
- * @apiParam {String} playType PVP or PVE
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiBody {Integer} playerID Mandatory unique Param.
+ * @apiBody {String} playType PVP or PVE
  *
  * @apiSuccess {Object} Model[{}] Item of the turn created.
  *
@@ -137,9 +140,9 @@ router
  * @apiName Update turn by wallteId and playerId
  * @apiGroup Turns
  *
- * @apiParam {Integer} playerID Mandatory unique Param.
- * @apiParam {String} turnNumber Turn number.
- * @apiParam {String} playType PVP or PVE.
+ * @apiParam {String} walletID Mandatory unique Param.
+ * @apiBody {Integer} playerID Turn number.
+ * @apiBody {String} playType PVP or PVE.
  * 
  * @apiSuccess {Object} Model[{}] Item of the turn created.
  *

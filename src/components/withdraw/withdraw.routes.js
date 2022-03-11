@@ -23,9 +23,9 @@ router.route("/").get(modelCtrl.list);
  * @apiName Create withdraw item with wallet ID
  * @apiGroup Withdraw
  *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Float} tokenBalance Mandatory The amount in withdraw request.
- * @apiParam {String} tokenType Mandatory The type of token in request.
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiBody {Float} tokenBalance Mandatory The amount in withdraw request.
+ * @apiBody {String} tokenType Mandatory The type of token in request.
  *
  * @apiSuccess {Object} Model[{}] Item of the withdraw created.
  *
@@ -59,8 +59,8 @@ router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
  *
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  * @apiSuccess {Object} Model[{}] List items of the Withdraw.
  *
  * @apiSuccessExample {json} Success-Response:

@@ -106,10 +106,10 @@ router
  * @apiName Top exp Listing
  * @apiGroup Players
  *
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
- * @apiParam {Datetime} start Start time.
- * @apiParam {Datetime} end End time.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
+ * @apiQuery {Datetime} start Start time.
+ * @apiQuery {Datetime} end End time.
  * @apiSuccess {Object} Model[{}] Item of the player created.
  *
  * @apiSuccessExample {json} Success-Response:
@@ -282,8 +282,8 @@ router
  * @apiGroup Players
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the Players.
  *

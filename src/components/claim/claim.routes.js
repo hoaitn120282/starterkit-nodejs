@@ -76,8 +76,8 @@ router.route('/')
  * @apiGroup Claim
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} litmit Items in a page.
- * @apiParam {Integer} skip Items will left in the list.
+ * @apiQuery {Integer} litmit Items in a page.
+ * @apiQuery {Integer} skip Items will left in the list.
  *
  * @apiSuccess {Object} Model[{}] List items of the Claims.
  *
