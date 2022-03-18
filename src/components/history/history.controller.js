@@ -146,8 +146,6 @@ async function getbyWalltediD(req, res, next) {
     raw: true,
   });
 
-  // console.log();
-
   const dataDays = await Promise.all(
     DaysArr.map(async (d) => {
       const listByDay = await History.getBywalletID({
@@ -204,31 +202,97 @@ function destroy(req, res, next) {
  * List Top history reward
  * @returns {History}
  */
-function listTopReward(req, res, next) {
-  const { limit = 50, skip = 0, start, end } = req.query;
-  return History.listHistoryTop({
-    skip,
-    limit,
-    where: {
-      createdAt: {
-        $between: [start, end],
+async function listTopReward(req, res, next) {
+  const {
+    limit = 50,
+    skip = 0,
+    start = new Date(),
+    end = new Date(),
+    activityName,
+  } = req.query;
+
+  // const countData = await History.count({
+  //   skip,
+  //   limit,
+  //   where: {
+  //     createdAt: {
+  //       $between: [
+  //         dayjs(start).format("YYYY-MM-DD"),
+  //         dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+  //       ],
+  //     },
+  //     activityName,
+  //   },
+  //   group: ["playerID", "player.id"],
+  //   attributes: [
+  //     "playerID",
+  //     [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+  //   ],
+  //   raw: true,
+  //   include: [
+  //     {
+  //       model: Player
+  //     },
+  //   ],
+  // });
+
+  if (activityName) {
+    return History.listHistoryTop({
+      skip,
+      limit,
+      where: {
+        createdAt: {
+          $between: [
+            dayjs(start).format("YYYY-MM-DD"),
+            dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+          ],
+        },
+        activityName,
+        rewardType: "SCORE"
       },
-    },
-    group: ["playerID", "player.id"],
-    attributes: [
-      "playerID",
-      [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
-    ],
-    include: [
-      {
-        model: Player,
-        // as: "player",
-        // attributes: [["id", "playerID"], "walletID", "starNumber"],
+      group: ["playerID", "player.id"],
+      attributes: [
+        "playerID",
+        [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+      ],
+      include: [
+        {
+          model: Player,
+          // as: "player",
+          // attributes: [["id", "playerID"], "walletID", "starNumber"],
+        },
+      ],
+    })
+      .then((historys) => res.json(historys))
+      .catch((e) => next(e));
+  } else {
+    return History.listHistoryTop({
+      skip,
+      limit,
+      where: {
+        createdAt: {
+          $between: [
+            dayjs(start).format("YYYY-MM-DD"),
+            dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+          ],
+        },
       },
-    ],
-  })
-    .then((historys) => res.json(historys))
-    .catch((e) => next(e));
+      group: ["playerID", "player.id"],
+      attributes: [
+        "playerID",
+        [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+      ],
+      include: [
+        {
+          model: Player,
+          // as: "player",
+          // attributes: [["id", "playerID"], "walletID", "starNumber"],
+        },
+      ],
+    })
+      .then((historys) => res.json(historys))
+      .catch((e) => next(e));
+  }
 }
 
 module.exports = {

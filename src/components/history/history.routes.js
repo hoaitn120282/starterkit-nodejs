@@ -92,7 +92,7 @@ router.route("/").get(modelCtrl.list);
  * @apiBody {Integer} playerID Mandatory unique Param.
  * @apiBody {Integer} rewardNumber Mandatory Reward number in play session.
  * @apiBody {Integer} expNumber Mandatory Experience number in play session.
- * @apiBody {String} rewardType Mandatory The of token reward won in game.
+ * @apiBody {String} rewardType Mandatory The of token reward won in game: TOC, SCORE, SNCT.
  * @apiBody {String} activityName Mandatory Activity name of play: PVP or PVE.
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
@@ -122,22 +122,41 @@ router.route("/").get(modelCtrl.list);
 router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
 
 /**
- * @api {post} /play-history/top-reward-toc Top reward TOC
+ * @api {get} /play-history/top-reward-toc Top reward history
  * @apiVersion 1.0.0
  * @apiName List top reward TOC
  * @apiGroup Play History
  *
  * @apiQuery {Integer} litmit Items in a page.
  * @apiQuery {Integer} skip Items will left in the list.
- * @apiQuery {Datetime} start Start time.
- * @apiQuery {Datetime} end End time.
+ * @apiQuery {Datetime} start Start time: yyyy-mm-dd.
+ * @apiQuery {Datetime} end End time: yyyy-mm-dd.
+ * @apiQuery {String} activityName PVP or notthing.
  *
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     [
- *      {
- *       "id": "1",
- *     ]
+ *  HTTP/1.1 200 OK
+ * [
+ *  {
+ *       "playerID": "2",
+ *       "total_amount": 66,
+ *       "player": {
+ *           "id": "2",
+ *           "walletID": "222",
+ *           "starNumber": 4,
+ *           "mana": 100,
+ *           "hp": 100,
+ *           "skinName": "fire",
+ *           "totalExp": 100,
+ *           "description": "test",
+ *           "external_url": null,
+ *           "image": null,
+ *           "attributes": null,
+ *           "tokenID": "1",
+ *           "createdAt": "2022-03-18T02:52:33.000Z",
+ *           "updatedAt": "2022-03-01T02:52:36.000Z"
+ *       }
+ *   }
+ * ]
  *
  *
  * @apiErrorExample Error-Response:
