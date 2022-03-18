@@ -40,7 +40,7 @@ router
 
 
 /**
- * @api {post} /rewards/top-reward-toc Top reward TOC
+ * @api {get} /rewards/top-reward-toc Top reward TOC
  * @apiVersion 1.0.0
  * @apiName List top reward TOC
  * @apiGroup Reward
