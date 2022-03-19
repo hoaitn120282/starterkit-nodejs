@@ -18,13 +18,13 @@ const paramValidation = {
     }),
   },
   bootMana: {
-    body: Joi.object({
+    params: Joi.object({
       walletID: Joi.string().required(),
       // mana: Joi.number().required(),
     }),
   },
   bootHp: {
-    body: Joi.object({
+    params: Joi.object({
       walletID: Joi.string().required(),
       hp: Joi.number().required(),
     }),
