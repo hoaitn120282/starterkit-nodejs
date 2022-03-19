@@ -153,7 +153,6 @@ function register(req, res, next) {
 
 function check(req, res, next) {
   const publicAddress = req.query.publicAddress.toLowerCase();
-
   User.findOne({ where: { publicAddress: publicAddress } })
     .then((foundUser) => {
       if (foundUser) {
@@ -161,6 +160,7 @@ function check(req, res, next) {
           user: foundUser,
         });
       } else {
+        console.log("publicAddress is not define!");
         return res.json({
           user: "publicAddress is not define!",
         });

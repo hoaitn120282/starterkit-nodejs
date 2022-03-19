@@ -38,10 +38,10 @@ router.route('/')
  * @apiName Create claim item with wallet ID
  * @apiGroup Claim
  *
- * @apiParam {String} walletID Mandatory unique Param.
- * @apiParam {Integer} claimRewardAmount Mandatory The amount in claim request.
- * @apiParam {String} claimRewardType Mandatory The type of token: PVP or PVE.
- * @apiParam {String} claimStatus Status of request, It should be "Confirmed".
+ * @apiBody {String} walletID Mandatory unique Param.
+ * @apiBody {Integer} claimRewardAmount Mandatory The amount in claim request.
+ * @apiBody {String} claimRewardType Mandatory The type of token: PVP or PVE.
+ * @apiBody {String} claimStatus Status of request, It should be "Confirmed".
  *
  * @apiSuccess {Object} Model[{}] Item of the claim created.
  *

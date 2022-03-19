@@ -25,8 +25,8 @@ const paramValidation = {
  * @apiName User login via signature & publicAddress
  * @apiGroup User
  *
- * @apiParam {String} signature  unique Param.
- * @apiParam {String} publicAddress unique Param.
+ * @apiBody {String} signature  unique Param.
+ * @apiBody {String} publicAddress unique Param.
  *
  * @apiSuccess {String} token Token of the User.
  *
@@ -54,8 +54,8 @@ router.route('/login')
  * @apiName User register publicAddress
  * @apiGroup User
  *
- * @apiParam {String} publicAddress Mandatory unique Param.
- * @apiParam {String} wallet Mandatory unique Param.
+ * @apiBody {String} publicAddress Mandatory unique Param.
+ * @apiBody {String} walletID Mandatory unique Param.
  *
  * @apiSuccess {String} nonce Nonce number of the publicAddress.
  * @apiSuccess {String} publicAddress publicAddress was submitted.
@@ -85,7 +85,7 @@ router.route('/register')
  * @apiName User checkAddress publicAddress
  * @apiGroup User
  *
- * @apiParam {String} publicAddress Mandatory unique Param.
+ * @apiQuery {String} publicAddress Mandatory unique Param.
  *
  * @apiSuccess {String} nonce Nonce number of the publicAddress.
  * @apiSuccess {String} publicAddress publicAddress was submitted.
