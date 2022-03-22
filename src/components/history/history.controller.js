@@ -62,6 +62,7 @@ function create(req, res, next) {
   return model
     .save()
     .then((savedmodel) => {
+      console.log("savedmodel", savedmodel);
       Models.Player.findOne({
         where: { walletID: savedmodel.walletID, id: req.body.playerID },
       }).then((player) => {
@@ -212,6 +213,7 @@ async function listTopReward(req, res, next) {
   } = req.query;
 
   // const countData = await History.count({
+  //   distinct: true,
   //   skip,
   //   limit,
   //   where: {
@@ -227,14 +229,18 @@ async function listTopReward(req, res, next) {
   //   attributes: [
   //     "playerID",
   //     [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+  //     // [sequelize.fn('DISTINCT', sequelize.col('playerID')), 'playerID'],
   //   ],
   //   raw: true,
   //   include: [
   //     {
-  //       model: Player
+  //       model: Player,
+  //       attributes: [],
+  //       include: []
   //     },
   //   ],
   // });
+
 
   if (activityName) {
     return History.listHistoryTop({
@@ -248,7 +254,7 @@ async function listTopReward(req, res, next) {
           ],
         },
         activityName,
-        rewardType: "SCORE"
+        rewardType: "SCORE",
       },
       group: ["playerID", "player.id"],
       attributes: [
@@ -285,8 +291,6 @@ async function listTopReward(req, res, next) {
       include: [
         {
           model: Player,
-          // as: "player",
-          // attributes: [["id", "playerID"], "walletID", "starNumber"],
         },
       ],
     })

@@ -126,7 +126,7 @@ function login(req, res, next) {
 function register(req, res, next) {
   const user = new User(req.body);
   user.publicAddress = user.publicAddress.toLowerCase();
-  user.walletID = user.walletID;
+  user.walletID = user.publicAddress.toLowerCase();
   // return res.json({ a: user });
   User.findOne({ where: { publicAddress: user.publicAddress } })
     .then((foundUser) => {

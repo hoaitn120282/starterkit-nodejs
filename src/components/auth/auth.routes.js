@@ -14,7 +14,7 @@ const paramValidation = {
   registerUser: {
     body: Joi.object({
       publicAddress: Joi.string().required(),
-      walletID: Joi.string().required(),
+      // walletID: Joi.string().required(),
     }),
   },
 };
@@ -55,7 +55,6 @@ router.route('/login')
  * @apiGroup User
  *
  * @apiBody {String} publicAddress Mandatory unique Param.
- * @apiBody {String} walletID Mandatory unique Param.
  *
  * @apiSuccess {String} nonce Nonce number of the publicAddress.
  * @apiSuccess {String} publicAddress publicAddress was submitted.

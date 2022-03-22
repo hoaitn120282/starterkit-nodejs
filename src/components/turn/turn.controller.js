@@ -71,6 +71,7 @@ function get(req, res, next) {
         obj.walletID = wallet;
         obj.turnNumber = 0;
         obj.playerID = playerID;
+        obj.playType = playType;
         if(playType === "PVP"){
           obj.turnLimit = 5;
         }else{

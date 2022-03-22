@@ -256,13 +256,21 @@ async function getPlayerByTokenID(req, res, next) {
  * @returns {Player}
  */
 async function listTopExp(req, res, next) {
-  const { limit = 50, skip = 0, start, end } = req.query;
+  const {
+    limit = 50,
+    skip = 0,
+    start = new Date(),
+    end = new Date(),
+  } = req.query;
   return Player.getListExp({
     skip,
     limit,
     where: {
       createdAt: {
-        $between: [start, end],
+        $between: [
+          dayjs(start).format("YYYY-MM-DD"),
+          dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+        ],
       },
     },
     order: [["totalExp", "DESC"]],
