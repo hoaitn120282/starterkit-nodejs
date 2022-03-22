@@ -97,14 +97,22 @@ function destroy(req, res, next) {
  * @returns {Reward}
  */
 function listTopReward(req, res, next) {
-  const { limit = 50, skip = 0, start, end } = req.query;
+  const {
+    limit = 50,
+    skip = 0,
+    start = new Date(),
+    end = new Date(),
+  } = req.query;
   return Reward.list({
     skip,
     limit,
     where: {
       rewardType: "TOC",
       updatedAt: {
-        $between: [start, end],
+        $between: [
+          dayjs(start).format("YYYY-MM-DD"),
+          dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+        ],
       },
     },
     order: [["rewardAmount", "DESC"]],
