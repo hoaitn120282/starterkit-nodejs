@@ -169,4 +169,22 @@ function check(req, res, next) {
     .catch((e) => next(e));
 }
 
-module.exports = { login, register, check };
+function getAuth(req, res, next) {
+  const { nonce } = req.params;
+  User.findOne({ where: { nonce } })
+    .then((foundUser) => {
+      if (foundUser) {
+        return res.json({
+          token: foundUser.token,
+          walletID: foundUser.publicAddress,
+        });
+      } else {
+        return res.json({
+          user: "nonce is not define!",
+        });
+      }
+    })
+    .catch((e) => next(e));
+}
+
+module.exports = { login, register, check, getAuth };

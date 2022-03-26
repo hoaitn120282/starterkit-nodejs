@@ -212,34 +212,60 @@ async function listTopReward(req, res, next) {
     activityName,
   } = req.query;
 
-  // const countData = await History.count({
-  //   distinct: true,
-  //   skip,
-  //   limit,
-  //   where: {
-  //     createdAt: {
-  //       $between: [
-  //         dayjs(start).format("YYYY-MM-DD"),
-  //         dayjs(end).add(1, "day").format("YYYY-MM-DD"),
-  //       ],
-  //     },
-  //     activityName,
-  //   },
-  //   group: ["playerID", "player.id"],
-  //   attributes: [
-  //     "playerID",
-  //     [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
-  //     // [sequelize.fn('DISTINCT', sequelize.col('playerID')), 'playerID'],
-  //   ],
-  //   raw: true,
-  //   include: [
-  //     {
-  //       model: Player,
-  //       attributes: [],
-  //       include: []
-  //     },
-  //   ],
-  // });
+  const countData = await History.count({
+    distinct: true,
+    skip,
+    limit,
+    where: {
+      createdAt: {
+        $between: [
+          dayjs(start).format("YYYY-MM-DD"),
+          dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+        ],
+      },
+      activityName,
+    },
+    group: ["playerID", "player.id"],
+    attributes: [
+      "playerID",
+      [sequelize.fn("SUM", sequelize.col("rewardNumber")), "total_amount"],
+    ],
+    raw: true,
+    include: [
+      {
+        model: Player,
+        // attributes: [],
+      },
+    ],
+  });
+
+  const countData1 = await History.findAll({
+    where: {
+      createdAt: {
+        $between: [
+          dayjs(start).format("YYYY-MM-DD"),
+          dayjs(end).add(1, "day").format("YYYY-MM-DD"),
+        ],
+      },
+      activityName,
+    },
+    group: ["playerID", "player.id"],
+    attributes: [
+      "playerID",
+      [sequelize.fn("SUM", sequelize.col("rewardNumber")), "total_amount"],
+    ],
+    raw: true,
+    include: [
+      {
+        model: Player,
+        attributes: [],
+      },
+    ],
+  });
+
+  return res.json({
+    countData1
+  })
 
 
   if (activityName) {
