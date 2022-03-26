@@ -112,4 +112,39 @@ router.route('/register')
 router.route('/checkAddress')
   .get(authCtrl.check);
 
+
+/**
+ * @api {get} /auth/getAuth/:nonce Get auth info 
+ * @apiVersion 1.0.0
+ * @apiName User Get Auth info
+ * @apiGroup User
+ *
+ * @apiParam {String} nonce Mandatory unique Param.
+ *
+ * @apiSuccess {String} walltedId WalltedAddress.
+ * @apiSuccess {String} publicAddress publicAddress was submitted.
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *    HTTP/1.1 200 OK
+ *    {
+ *      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoiMiIsInB1YmxpY0FkZHJlc3MiOiIweGYzYzJkMmU1ZjcxMzRjOTdjNzgxNmQ1MDI2MzNmNTkyNWRhZjdjOTcifSwiaWF0IjoxNjQ3OTE5NjU3fQ.aHLe3t_gnnfUkCkmlbRzbCOIvyVyLCqo5qiqKSIK2cs",
+ *      "walletID": "0xf3c2d2e5f7134c97c7816d502633f5925daf7c97"
+ *    }
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "mgs": "publicAddress is not define",
+ *     }
+ *
+ *
+ * @apiErrorExample Error-Response:
+ *     HTTP/1.1 404 Not Found
+ *     {
+ *       "error": "UserNotFound"
+ *     }
+ */
+router.route('/getAuth/:nonce')
+.get(authCtrl.getAuth);
+
 module.exports = router;
