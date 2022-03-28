@@ -76,7 +76,6 @@ function get(req, res, next) {
           obj.turnLimit = 5;
         }else{
           obj.turnLimit = checkTurn(player.starNumber);
-      
         }
         obj.save();
         res.json(obj);
@@ -115,7 +114,6 @@ async function create(req, res, next) {
     model.turnLimit = 5;
   }else{
     model.turnLimit = checkTurn(player.starNumber);
-
   }
   model.turnNumber = 0;
   return model

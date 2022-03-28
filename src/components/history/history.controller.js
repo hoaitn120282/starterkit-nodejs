@@ -62,9 +62,10 @@ function create(req, res, next) {
   return model
     .save()
     .then((savedmodel) => {
-      console.log("savedmodel", savedmodel);
       Models.Player.findOne({
-        where: { walletID: savedmodel.walletID, id: req.body.playerID },
+        // Will update when Edric release mint NFT
+        // where: { walletID: savedmodel.walletID, id: req.body.playerID },
+        where: { id: req.body.playerID },
       }).then((player) => {
         if (!isEmpty(player)) {
           const playerObj = player;
@@ -264,9 +265,8 @@ async function listTopReward(req, res, next) {
   });
 
   return res.json({
-    countData1
-  })
-
+    countData1,
+  });
 
   if (activityName) {
     return History.listHistoryTop({
