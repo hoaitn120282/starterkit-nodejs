@@ -160,7 +160,6 @@ function check(req, res, next) {
           user: foundUser,
         });
       } else {
-        console.log("publicAddress is not define!");
         return res.json({
           user: "publicAddress is not define!",
         });
@@ -179,9 +178,15 @@ function getAuth(req, res, next) {
           walletID: foundUser.publicAddress,
         });
       } else {
-        return res.json({
-          user: "nonce is not define!",
-        });
+        // return res.json({
+        //   user: "nonce is not define!",
+        // });
+        const err = new APIError(
+          "nonce is not define!",
+          httpStatus.NOT_FOUND,
+          true
+        );
+        return Promise.reject(err);
       }
     })
     .catch((e) => next(e));
