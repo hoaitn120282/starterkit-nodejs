@@ -141,7 +141,8 @@ router
  * @apiGroup Turns
  *
  * @apiParam {String} walletID Mandatory unique Param.
- * @apiBody {Integer} playerID Turn number.
+ * @apiBody {Integer} playerID playerID.
+ * @apiBody {Integer} turnNumber Turn number.  
  * @apiBody {String} playType PVP or PVE.
  * 
  * @apiSuccess {Object} Model[{}] Item of the turn created.
