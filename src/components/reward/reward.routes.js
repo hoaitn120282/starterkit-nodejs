@@ -47,8 +47,8 @@ router
  *
  * @apiQuery {Integer} litmit Items in a page.
  * @apiQuery {Integer} skip Items will left in the list.
- * @apiQuery {Datetime} start Start time
- * @apiQuery {Datetime} end End time
+ * @apiQuery {Datetime} start Start time: yyyy-mm-dd.
+ * @apiQuery {Datetime} end End time: yyyy-mm-dd.
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
