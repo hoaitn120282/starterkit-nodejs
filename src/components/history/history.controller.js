@@ -213,31 +213,7 @@ async function listTopReward(req, res, next) {
     activityName,
   } = req.query;
 
-  // const countData1 = await History.findAll({
-  //   where: {
-  //     createdAt: {
-  //       $between: [
-  //         dayjs(start).format("YYYY-MM-DD"),
-  //         dayjs(end).add(1, "day").format("YYYY-MM-DD"),
-  //       ],
-  //     },
-  //     activityName,
-  //   },
-  //   group: ["playerID", "player.id"],
-  //   attributes: [
-  //     "playerID",
-  //     [sequelize.fn("SUM", sequelize.col("rewardNumber")), "total_amount"],
-  //   ],
-  //   raw: true,
-  //   include: [
-  //     {
-  //       model: Player,
-  //       attributes: [],
-  //     },
-  //   ],
-  // });
-
-  if (activityName) {
+  if (activityName === "PVP") {
     return History.listHistoryTop({
       skip,
       limit,
@@ -254,19 +230,17 @@ async function listTopReward(req, res, next) {
       group: ["playerID", "player.id"],
       attributes: [
         "playerID",
-        [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+        [sequelize.fn("sum", sequelize.col("rewardNumber")), "otalAmount"],
       ],
       include: [
         {
           model: Player,
-          // as: "player",
-          // attributes: [["id", "playerID"], "walletID", "starNumber"],
         },
       ],
     })
       .then((historys) => res.json(historys))
       .catch((e) => next(e));
-  } else {
+  } else if (activityName === "PVE") {
     return History.listHistoryTop({
       skip,
       limit,
@@ -277,11 +251,13 @@ async function listTopReward(req, res, next) {
             dayjs(end).add(1, "day").format("YYYY-MM-DD"),
           ],
         },
+        activityName,
+        rewardType: "TOC",
       },
       group: ["playerID", "player.id"],
       attributes: [
         "playerID",
-        [sequelize.fn("sum", sequelize.col("rewardNumber")), "total_amount"],
+        [sequelize.fn("sum", sequelize.col("rewardNumber")), "totalAmount"],
       ],
       include: [
         {
