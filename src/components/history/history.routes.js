@@ -131,7 +131,7 @@ router.route("/").post(validate(paramValidation.createModel), modelCtrl.create);
  * @apiQuery {Integer} skip Items will left in the list.
  * @apiQuery {Datetime} start Start time: yyyy-mm-dd.
  * @apiQuery {Datetime} end End time: yyyy-mm-dd.
- * @apiQuery {String} activityName PVP or notthing.
+ * @apiQuery {String} activityName PVP or PVE.
  *
  * @apiSuccessExample {json} Success-Response:
  *  HTTP/1.1 200 OK
