@@ -86,6 +86,7 @@ function login(req, res, next) {
       // Step 4: Create JWT
       ////////////////////////////////////////////////////
       .then((user) => {
+        nonce = user.nonce;
         return new Promise((resolve, reject) =>
           // https://github.com/auth0/node-jsonwebtoken
           jwt.sign(
@@ -113,7 +114,7 @@ function login(req, res, next) {
           )
         );
       })
-      .then((accessToken) => res.json({ accessToken }))
+      .then((accessToken) => res.json({ accessToken, nonce }))
       .catch(next)
   );
 }
